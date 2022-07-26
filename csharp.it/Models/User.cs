@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 
 namespace csharp.it.Models
 {
-	public class User
-	{
+	public class User : IdentityUser<Guid>
+    {
 		public string FirstName { get; set; }
 		public string LastName { get; set; }
         public string RestorePasswordCode { get; set; }
-        public string PictureUrl { get; set; }
         public string Password { get; set; }
         public string Token { get; set; }
         public Guid? RoleId { get; set; }
@@ -22,10 +22,18 @@ namespace csharp.it.Models
         public string Description { get; set; }
 
         public List<UserTask> UserTasks { get; set; }
+        public List<UserGroup> UserGroups { get; set; }
+        public List<Course> Courses { get; set; }
+        public List<Group> Groups { get; set; }
 
 		public User()
 		{
+            Blocked = false;
+
 			UserTasks = new List<UserTask>();
+            Courses = new List<Course>();
+            UserGroups = new List<UserGroup>();
+            Groups = new List<Group>();
 		}
 	}
 }

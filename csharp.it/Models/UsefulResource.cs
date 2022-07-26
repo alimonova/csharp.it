@@ -1,5 +1,4 @@
-﻿using System;
-namespace csharp.it.Models
+﻿namespace csharp.it.Models
 {
 	public class UsefulResource
 	{
@@ -9,10 +8,6 @@ namespace csharp.it.Models
 		public bool Advanced { get; set; }
 		public int LessonId { get; set; }
 		public Lesson Lesson { get; set; }
-
-		public UsefulResource()
-		{
-		}
 	}
 }
 

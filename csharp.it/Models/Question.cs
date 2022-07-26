@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace csharp.it.Models
 {
@@ -11,6 +10,8 @@ namespace csharp.it.Models
 		public string Explanation { get; set; }
 		public int RightAnswerId { get; set; }
 		public Answer RightAnswer { get; set; }
+		public int LessonId { get; set; }
+		public Lesson Lesson { get; set; }
 
 		public List<Answer> Answers { get; set; }
 

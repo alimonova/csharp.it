@@ -1,5 +1,4 @@
-﻿using System;
-namespace csharp.it.Models
+﻿namespace csharp.it.Models
 {
 	public class PracticalExample
 	{
@@ -10,10 +9,6 @@ namespace csharp.it.Models
 		public string Name { get; set; }
 		public int LessonId { get; set; }
 		public Lesson Lesson { get; set; }
-
-		public PracticalExample()
-		{
-		}
 	}
 }
 

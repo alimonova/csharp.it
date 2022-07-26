@@ -11,11 +11,11 @@ namespace csharp.it.Models
 		public int CourseId { get; set; }
 		public Course Course { get; set; }
 
-		public List<UserCourse> Students { get; set; }
+		public List<UserGroup> Students { get; set; }
 
 		public Group()
 		{
-			Students = new List<UserCourse>();
+			Students = new List<UserGroup>();
 		}
 	}
 }

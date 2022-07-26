@@ -1,5 +1,4 @@
-﻿using System;
-namespace csharp.it.Models
+﻿namespace csharp.it.Models
 {
 	public class Answer
 	{
@@ -7,10 +6,6 @@ namespace csharp.it.Models
 		public int QuestionId { get; set; }
 		public Question Question { get; set; }
 		public string Text { get; set; }
-
-		public Answer()
-		{
-		}
 	}
 }
 
