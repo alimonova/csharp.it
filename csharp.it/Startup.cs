@@ -14,6 +14,10 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using csharp.it.Controllers;
+using csharp.it.Services.Interfaces;
+using csharp.it.Services;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace csharp.it
 {
@@ -30,7 +34,7 @@ namespace csharp.it
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-
+            services.AddHttpContextAccessor();
             services.AddDbContext<Models.DbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -38,6 +42,9 @@ namespace csharp.it
 
             // ---------- START OF SERVICES -----------
             services.AddTransient<Seeder>();
+            services.AddScoped<ICourseService, CourseService>();
+            services.AddScoped<IAccountService, AccountService>();
+            services.TryAddScoped<IHttpContextAccessor, HttpContextAccessor>();
             // ---------- END OF SERVICES -----------
 
             services.AddHttpClient();

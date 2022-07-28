@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace csharp.it.Models
 {
@@ -9,6 +10,7 @@ namespace csharp.it.Models
 		public string Name { get; set; }
 		public string Description { get; set; }
 		public Guid AuthorId { get; set; }
+		[JsonIgnore]
 		public User Author { get; set; }
 		public int TasksNum { get; set; }
 		public int SecondsNum { get; set; }
