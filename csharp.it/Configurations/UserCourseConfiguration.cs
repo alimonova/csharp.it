@@ -5,24 +5,25 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace csharp.it.Configurations
 {
-	public class UserGroupConfiguration : IEntityTypeConfiguration<UserGroup>
+	public class UserCourseConfiguration : IEntityTypeConfiguration<UserCourse>
     {
-        public void Configure(EntityTypeBuilder<UserGroup> builder)
+        public void Configure(EntityTypeBuilder<UserCourse> builder)
         {
-            builder.ToTable("UserGroups");
+            builder.ToTable("UserCourses");
             builder.HasKey(ug => ug.Id);
 
             builder.Property(ug => ug.Progress).IsRequired();
 
             builder
                 .HasOne(ug => ug.User)
-                .WithMany(u => u.UserGroups)
+                .WithMany(u => u.UserCourses)
                 .HasForeignKey(ug => ug.UserId);
 
             builder
-                .HasOne(ug => ug.Group)
+                .HasOne(ug => ug.Course)
                 .WithMany(g => g.Students)
-                .HasForeignKey(ug => ug.GroupId);
+                .OnDelete(DeleteBehavior.NoAction)
+                .HasForeignKey(ug => ug.CourseId);
         }
     }
 }

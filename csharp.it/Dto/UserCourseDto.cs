@@ -1,7 +1,7 @@
 ﻿using System;
 namespace csharp.it.Dto
 {
-	public class UserGroupDto
+	public class UserCourseDto
 	{
 		public int Id { get; set; }
 		public double Progress { get; set; }

@@ -1,16 +1,16 @@
 ﻿using System;
 namespace csharp.it.Models
 {
-	public class UserGroup
+	public class UserCourse
 	{
 		public int Id { get; set; }
 		public double Progress { get; set; }
-		public int GroupId { get; set; }
-		public Group Group { get; set; }
+		public int CourseId { get; set; }
+		public Course Course { get; set; }
 		public Guid UserId { get; set; }
 		public User User { get; set; }
 
-		public UserGroup()
+		public UserCourse()
         {
 			Progress = 0;
         }

@@ -1,5 +1,5 @@
 ﻿using System;
-using csharp.it.Models;
+using csharp.it.Models; 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -17,18 +17,14 @@ namespace csharp.it.Configurations
             builder
                 .HasOne(ut => ut.Task)
                 .WithMany(t => t.UserTasks)
-                .HasForeignKey(ut => ut.TaskId);
+                .HasForeignKey(ut => ut.TaskId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder
                 .HasOne(ut => ut.Student)
                 .WithMany(u => u.UserTasks)
-                .HasForeignKey(ut => ut.TaskId);
-
-            builder
-                .HasOne(ut => ut.Teacher)
-                .WithMany(u => u.UserTasks)
-                .HasForeignKey(ut => ut.TaskId);
-
+                .HasForeignKey(ut => ut.StudentId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

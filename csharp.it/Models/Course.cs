@@ -15,7 +15,7 @@ namespace csharp.it.Models
 
 		public List<Chapter> Chapters { get; set; }
 		public List<Tarif> Tarifs { get; set; }
-		public List<Group> Groups { get; set; }
+		public List<UserCourse> Students { get; set; }
 
 		public Course()
 		{
@@ -24,7 +24,7 @@ namespace csharp.it.Models
 
 			Chapters = new List<Chapter>();
 			Tarifs = new List<Tarif>();
-			Groups = new List<Group>();
+			Students = new List<UserCourse>();
 		}
 	}
 }

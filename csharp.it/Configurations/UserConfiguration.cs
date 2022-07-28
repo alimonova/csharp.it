@@ -19,15 +19,11 @@ namespace csharp.it.Configurations
             builder
                 .HasMany(u => u.UserTasks)
                 .WithOne(ut => ut.Student)
-                .HasForeignKey(ut => ut.StudentId);
+                .HasForeignKey(ut => ut.StudentId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder
-                .HasMany(u => u.UserTasks)
-                .WithOne(ut => ut.Teacher)
-                .HasForeignKey(ut => ut.TeacherId);
-
-            builder
-                .HasMany(u => u.UserGroups)
+                .HasMany(u => u.UserCourses)
                 .WithOne(ug => ug.User)
                 .HasForeignKey(ug => ug.UserId);
 
@@ -35,11 +31,6 @@ namespace csharp.it.Configurations
                 .HasMany(u => u.Courses)
                 .WithOne(c => c.Author)
                 .HasForeignKey(c => c.AuthorId);
-
-            builder
-                .HasMany(u => u.Groups)
-                .WithOne(g => g.Teacher)
-                .HasForeignKey(g => g.TeacherId);
         }
     }
 }

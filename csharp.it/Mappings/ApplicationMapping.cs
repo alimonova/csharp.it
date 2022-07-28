@@ -11,7 +11,6 @@ namespace csharp.it.Mappings
             CreateMap<Answer, AnswerDto>().ReverseMap();
             CreateMap<Chapter, ChapterDto>().ReverseMap();
             CreateMap<Course, CourseDto>().ReverseMap();
-            CreateMap<Group, GroupDto>().ReverseMap();
             CreateMap<Lesson, LessonDto>().ReverseMap();
             CreateMap<PracticalExample, PracticalExampleDto>().ReverseMap();
             CreateMap<Question, QuestionDto>().ReverseMap();
@@ -19,7 +18,7 @@ namespace csharp.it.Mappings
             CreateMap<Task, TaskDto>().ReverseMap();
             CreateMap<UsefulResource, UsefulResourceDto>().ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
-            CreateMap<UserGroup, UserGroupDto>().ReverseMap();
+            CreateMap<UserCourse, UserCourseDto>().ReverseMap();
             CreateMap<UserTask, UserTaskDto>().ReverseMap();
         }
     }

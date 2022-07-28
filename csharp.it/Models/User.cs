@@ -22,9 +22,8 @@ namespace csharp.it.Models
         public string Description { get; set; }
 
         public List<UserTask> UserTasks { get; set; }
-        public List<UserGroup> UserGroups { get; set; }
+        public List<UserCourse> UserCourses { get; set; }
         public List<Course> Courses { get; set; }
-        public List<Group> Groups { get; set; }
 
 		public User()
 		{
@@ -32,8 +31,7 @@ namespace csharp.it.Models
 
 			UserTasks = new List<UserTask>();
             Courses = new List<Course>();
-            UserGroups = new List<UserGroup>();
-            Groups = new List<Group>();
+            UserCourses = new List<UserCourse>();
 		}
 	}
 }
