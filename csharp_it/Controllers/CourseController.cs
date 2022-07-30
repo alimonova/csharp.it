@@ -118,7 +118,6 @@ namespace csharp_it.Controllers
             return Forbid();
         }
 
-        //[HttpPost("AddUserToCourse/{userId}/{courseId}")]
     }
 }
 
