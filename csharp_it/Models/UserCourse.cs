@@ -6,11 +6,11 @@ namespace csharp_it.Models
 		public int Id { get; set; }
 		public double Progress { get; set; }
 		public int CourseId { get; set; }
-		public Course Course { get; set; }
+		public virtual Course Course { get; set; }
 		public Guid UserId { get; set; }
-		public User User { get; set; }
+		public virtual User User { get; set; }
 		public Guid TarifId { get; set; }
-		public Tarif Tarif { get; set; }
+		public virtual Tarif Tarif { get; set; }
 
 		public UserCourse()
         {

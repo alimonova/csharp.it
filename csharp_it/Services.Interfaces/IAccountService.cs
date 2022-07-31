@@ -19,6 +19,7 @@ namespace csharp_it.Services.Interfaces
 		Task<User> UpdateAccountWallet(double sum);
 		Transaction[] GetTransactions();
 		Task<UserCourse> BuyCourse(Guid tarifId);
+		Task<bool> CheckAccessToCourse(int courseId, string accessName);
 	}
 }
 

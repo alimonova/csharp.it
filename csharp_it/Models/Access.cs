@@ -7,7 +7,7 @@ namespace csharp_it.Models
 		public string Name { get; set; }
 		public string? Description { get; set; }
 
-		public List<TarifAccess> TarifAccesses { get; set; }
+		public virtual List<TarifAccess> TarifAccesses { get; set; }
 
 		public Access()
         {

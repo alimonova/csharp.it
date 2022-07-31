@@ -15,6 +15,7 @@ namespace csharp_it.Mappings
             CreateMap<Lesson, LessonDto>().ReverseMap();
             CreateMap<PracticalExample, PracticalExampleDto>().ReverseMap();
             CreateMap<Question, QuestionDto>().ReverseMap();
+            CreateMap<Question, QuestionNoExplanationDto>().ReverseMap();
             CreateMap<Tarif, TarifDto>().ReverseMap();
             CreateMap<Task, TaskDto>().ReverseMap();
             CreateMap<UsefulResource, UsefulResourceDto>().ReverseMap();

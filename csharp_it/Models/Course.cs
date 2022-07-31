@@ -11,13 +11,13 @@ namespace csharp_it.Models
 		public string Description { get; set; }
 		public Guid AuthorId { get; set; }
 		[JsonIgnore]
-		public User Author { get; set; }
+		public virtual User Author { get; set; }
 		public int TasksNum { get; set; }
 		public int SecondsNum { get; set; }
 
-		public List<Chapter> Chapters { get; set; }
-		public List<Tarif> Tarifs { get; set; }
-		public List<UserCourse> Students { get; set; }
+		public virtual List<Chapter> Chapters { get; set; }
+		public virtual List<Tarif> Tarifs { get; set; }
+		public virtual List<UserCourse> Students { get; set; }
 
 		public Course()
 		{

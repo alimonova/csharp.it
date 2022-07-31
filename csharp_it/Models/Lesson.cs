@@ -7,15 +7,15 @@ namespace csharp_it.Models
 		public int Id { get; set; }
 		public int Number { get; set; }
 		public int ChapterId { get; set; }
-		public Chapter Chapter { get; set; }
+		public virtual Chapter Chapter { get; set; }
 		public string Topic { get; set; }
 		public string? ContentLink { get; set; }
 		public string? VideoLink { get; set; }
 
-		public List<Question> Questions { get; set; }
-		public List<PracticalExample> PracticalExamples { get; set; }
-		public List<UsefulResource> UsefulResources { get; set; }
-		public List<Task> Tasks { get; set; }
+		public virtual List<Question> Questions { get; set; }
+		public virtual List<PracticalExample> PracticalExamples { get; set; }
+		public virtual List<UsefulResource> UsefulResources { get; set; }
+		public virtual List<Task> Tasks { get; set; }
 
 		public Lesson()
 		{

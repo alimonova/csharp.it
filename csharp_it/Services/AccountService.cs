@@ -230,7 +230,7 @@ namespace csharp_it.Services
             return users;
         }
 
-        public async Task<bool> CheckAccessToCourse(int courseId, int accessId)
+        public async Task<bool> CheckAccessToCourse(int courseId, string accessName)
         {
             var course = await _dbcontext.UserCourses.FirstOrDefaultAsync(x=>x.CourseId == courseId);
 
@@ -239,15 +239,15 @@ namespace csharp_it.Services
                 return false;
             }
 
-            var tarif = await _dbcontext.Tarifs.FirstOrDefaultAsync(x => x.CourseId == course.Id);
+            var access = _dbcontext.Accesses.FirstOrDefault(x => x.Name == accessName);
 
-            if (tarif == null)
+            if (access == null)
             {
                 return false;
             }
 
             var tarifAccess = await _dbcontext.TarifAccesses.FirstOrDefaultAsync(
-                x => x.AccessId == accessId && x.TarifId == tarif.Id);
+                x => x.AccessId == access.Id && x.TarifId == course.Tarif.Id);
 
             if (tarifAccess == null)
             {

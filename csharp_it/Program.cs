@@ -16,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<csharp_it.Models.DbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddCors();
 
@@ -24,6 +24,8 @@ builder.Services.AddCors();
 builder.Services.AddTransient<Seeder>();
 builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<IChapterService, ChapterService>();
+builder.Services.AddScoped<ILessonService, LessonService>();
+builder.Services.AddScoped<IQuestionService, QuestionService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.TryAddScoped<IHttpContextAccessor, HttpContextAccessor>();
 // ---------- END OF builder.Services -----------

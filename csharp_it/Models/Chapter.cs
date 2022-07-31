@@ -11,10 +11,10 @@ namespace csharp_it.Models
         public string? Description { get; set; }
         public int CourseId { get; set; }
         [JsonIgnore]
-        public Course Course { get; set; }
+        public virtual Course Course { get; set; }
         public int SecondsNum { get; set; }
 
-        public List<Lesson> Lessons { get; set; }
+        public virtual List<Lesson> Lessons { get; set; }
 
         public Chapter()
         {

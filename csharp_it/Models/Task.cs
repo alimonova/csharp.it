@@ -8,12 +8,12 @@ namespace csharp_it.Models
 		public string Text { get; set; }
 		public int Number { get; set; }
 		public int LessonId { get; set; }
-		public Lesson Lesson { get; set; }
+		public virtual Lesson Lesson { get; set; }
 		public string Example { get; set; }
 		public string Tips { get; set; }
 
-		public List<UserTask> UserTasks { get; set; }
-		public List<Solution> Solutions { get; set; }
+		public virtual List<UserTask> UserTasks { get; set; }
+		public virtual List<Solution> Solutions { get; set; }
 
 		public Task()
 		{

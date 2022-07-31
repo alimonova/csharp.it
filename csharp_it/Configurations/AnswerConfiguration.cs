@@ -16,8 +16,7 @@ namespace csharp_it.Configurations
             builder
                 .HasOne(a => a.Question)
                 .WithMany(q => q.Answers)
-                .HasForeignKey(a => a.QuestionId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .HasForeignKey(a => a.QuestionId);
         }
     }
 }

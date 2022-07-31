@@ -1,11 +1,11 @@
-﻿namespace csharp_it.Dto
+﻿using System;
+namespace csharp_it.Dto
 {
-	public class QuestionDto
+	public class QuestionNoExplanationDto
 	{
 		public int Id { get; set; }
 		public int Number { get; set; }
 		public string Text { get; set; }
-		public string Explanation { get; set; }
 		public int LessonId { get; set; }
 	}
 }
