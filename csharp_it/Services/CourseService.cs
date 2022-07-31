@@ -13,13 +13,10 @@ namespace csharp_it.Services
     public class CourseService : ICourseService
     {
         private readonly Models.DbContext _dbcontext;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CourseService(Models.DbContext dbContext,
-            IHttpContextAccessor httpContextAccessor)
+        public CourseService(Models.DbContext dbContext)
         {
             _dbcontext = dbContext;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<Course> CreateCourseAsync(Course course)

@@ -14,13 +14,14 @@ namespace csharp_it.Models
 		// 2 - EUR
 		public int Currency { get; set; }
 		public string Description { get; set; }
-		public string Access { get; set; }
 
 		public List<UserCourse> UserCourses { get; set; }
+		public List<TarifAccess> TarifAccesses { get; set; }
 
 		public Tarif()
         {
 			UserCourses = new List<UserCourse>();
+			TarifAccesses = new List<TarifAccess>();
         }
 	}
 }

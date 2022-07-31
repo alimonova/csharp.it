@@ -216,6 +216,46 @@ namespace csharp_it.Services
 
             return userCourse;
         }
+
+        public async Task<IEnumerable<User>> GetStudentsOfCourse(int courseId)
+        {
+            var userCourses = _dbcontext.UserCourses.Where(x => x.CourseId == courseId);
+            var users = new List<User>();
+
+            foreach (var userCourse in userCourses)
+            {
+                users.Add(_dbcontext.Users.FirstOrDefault(x=>x.Id == userCourse.UserId);
+            }
+
+            return users;
+        }
+
+        public async Task<bool> CheckAccessToCourse(int courseId, int accessId)
+        {
+            var course = await _dbcontext.UserCourses.FirstOrDefaultAsync(x=>x.CourseId == courseId);
+
+            if (course == null)
+            {
+                return false;
+            }
+
+            var tarif = await _dbcontext.Tarifs.FirstOrDefaultAsync(x => x.CourseId == course.Id);
+
+            if (tarif == null)
+            {
+                return false;
+            }
+
+            var tarifAccess = await _dbcontext.TarifAccesses.FirstOrDefaultAsync(
+                x => x.AccessId == accessId && x.TarifId == tarif.Id);
+
+            if (tarifAccess == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }
 

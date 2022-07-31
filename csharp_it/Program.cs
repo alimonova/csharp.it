@@ -23,6 +23,7 @@ builder.Services.AddCors();
 // ---------- START OF builder.Services -----------
 builder.Services.AddTransient<Seeder>();
 builder.Services.AddScoped<ICourseService, CourseService>();
+builder.Services.AddScoped<IChapterService, ChapterService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.TryAddScoped<IHttpContextAccessor, HttpContextAccessor>();
 // ---------- END OF builder.Services -----------

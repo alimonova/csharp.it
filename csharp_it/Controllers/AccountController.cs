@@ -27,12 +27,14 @@ namespace csharp_it.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IAccountService _service;
+        private readonly ICourseService _courses;
 
-
-        public AccountController(IMapper mapper, IAccountService service)
+        public AccountController(IMapper mapper, IAccountService service,
+            ICourseService courses)
         {
             _mapper = mapper;
             _service = service;
+            _courses = courses;
         }
 
         [HttpPost("Registration")]
@@ -139,6 +141,22 @@ namespace csharp_it.Controllers
             }
 
             return Ok(result);
+        }
+
+        [Authorize]
+        [HttpGet("ReadStudentsByCourseId/{courseId}")]
+        public async Task<IActionResult> GetStudentsByCourse(int courseId)
+        {
+            var course = await _courses.GetCourseByIdAsync(courseId);
+            var user = await _service.GetCurrentUserAsync();
+            if (course.AuthorId != user.Id)
+            {
+                return Forbid();
+            }
+
+            var students = _service.GetStudentsOfCourse(courseId);
+            var _students = _mapper.Map<IEnumerable<UserDto>>(students);
+            return Ok(_students);
         }
     }
 }

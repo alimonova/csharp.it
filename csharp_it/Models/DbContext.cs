@@ -18,6 +18,8 @@ namespace csharp_it.Models
         public DbSet<UsefulResource> UsefulResources { get; set; }
         public DbSet<UserCourse> UserCourses { get; set; }
         public DbSet<UserTask> UserTasks { get; set; }
+        public DbSet<Access> Accesses { get; set; }
+        public DbSet<TarifAccess> TarifAccesses { get; set; }
 
         public DbContext()
         { }
@@ -41,6 +43,8 @@ namespace csharp_it.Models
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new UserCourseConfiguration());
             modelBuilder.ApplyConfiguration(new UserTaskConfiguration());
+            modelBuilder.ApplyConfiguration(new AccessConfiguration());
+            modelBuilder.ApplyConfiguration(new TarifAccessConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

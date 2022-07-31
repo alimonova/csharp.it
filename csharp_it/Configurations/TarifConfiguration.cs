@@ -15,7 +15,6 @@ namespace csharp_it.Configurations
             builder.Property(t => t.Price).IsRequired();
             builder.Property(t => t.Currency).IsRequired();
             builder.Property(t => t.Description).IsRequired();
-            builder.Property(t => t.Access).IsRequired();
 
             builder
                 .HasOne(t => t.Course)
@@ -26,6 +25,12 @@ namespace csharp_it.Configurations
                 .HasMany(t => t.UserCourses)
                 .WithOne(uc => uc.Tarif)
                 .HasForeignKey(uc => uc.TarifId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder
+                .HasMany(t => t.TarifAccesses)
+                .WithOne(ta => ta.Tarif)
+                .HasForeignKey(ta => ta.TarifId)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }

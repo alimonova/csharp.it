@@ -13,6 +13,7 @@ namespace csharp_it.Services.Interfaces
 		Task<JwtSecurityToken> Authenticate(UserAuthorization model);
 		Task<User> GetCurrentUserAsync();
 		Task<IEnumerable<User>> GetUsersOfRole(string role);
+		Task<IEnumerable<User>> GetStudentsOfCourse(int courseId);
 		Task<IEnumerable<string>> GetCurrentUserRoles();
 		Task<IEnumerable<string>> GetRolesByUserEmail(string email);
 		Task<User> UpdateAccountWallet(double sum);
