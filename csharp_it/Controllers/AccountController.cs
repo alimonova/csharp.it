@@ -4,6 +4,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using csharp_it.Dto;
@@ -110,6 +112,33 @@ namespace csharp_it.Controllers
             }
 
             return Ok(roles);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("GetTransactions")]
+        public ActionResult<Transaction[]> Get(string name)
+        {
+            var transactions = _service.GetTransactions();
+
+            if (transactions == null)
+            {
+                return NoContent();
+            }
+
+            return Ok(transactions);
+        }
+
+        [HttpPost("BuyCourse/{tarifId}")]
+        public async Task<IActionResult> BuyCourse(Guid tarifId)
+        {
+            var result = await _service.BuyCourse(tarifId);
+
+            if (result == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(result);
         }
     }
 }

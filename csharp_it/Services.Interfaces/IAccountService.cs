@@ -15,6 +15,9 @@ namespace csharp_it.Services.Interfaces
 		Task<IEnumerable<User>> GetUsersOfRole(string role);
 		Task<IEnumerable<string>> GetCurrentUserRoles();
 		Task<IEnumerable<string>> GetRolesByUserEmail(string email);
+		Task<User> UpdateAccountWallet(double sum);
+		Transaction[] GetTransactions();
+		Task<UserCourse> BuyCourse(Guid tarifId);
 	}
 }
 

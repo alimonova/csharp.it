@@ -20,6 +20,7 @@ namespace csharp_it.Models
         public string? LastBotMessage { get; set; }
         public string? Avatar { get; set; }
         public string? Description { get; set; }
+        public double WalletMoney { get; set; }
 
         public List<UserTask> UserTasks { get; set; }
         public List<UserCourse> UserCourses { get; set; }

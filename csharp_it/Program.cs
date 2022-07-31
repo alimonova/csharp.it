@@ -51,6 +51,9 @@ var mapper = config.CreateMapper();
 builder.Services.AddSingleton(mapper);
 // ---------- END OF MAPPER -----------
 
+builder.Services.Configure<WayForPaySettings>(builder.Configuration.GetSection("WayForPay"));
+builder.Services.AddOptions<WayForPaySettings>("WayForPay");
+
 // ---------- START OF JWT AUTHENTICATION -----------
 builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("Jwt"));
 builder.Services.AddOptions<TokenSettings>("Jwt");
