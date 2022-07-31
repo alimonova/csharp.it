@@ -9,61 +9,66 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace csharp_it.Controllers
 {
-	[Route("api/[controller]")]
-	[ApiController]
-	public class ChapterController : ControllerBase
+    [Route("api/[controller]")]
+    [ApiController]
+    public class LessonController : ControllerBase
     {
-        private readonly IChapterService _service;
+        private readonly ILessonService _service;
         private readonly IAccountService _account;
         private readonly ICourseService _courses;
+        private readonly IChapterService _chapters;
         private readonly IMapper _mapper;
 
-        public ChapterController(IChapterService service, IMapper mapper,
-            IAccountService account, ICourseService courses)
+        public LessonController(ILessonService service, IMapper mapper,
+            IAccountService account, ICourseService courses,
+            IChapterService chapters)
         {
             _service = service;
             _mapper = mapper;
             _account = account;
             _courses = courses;
+            _chapters = chapters;
         }
 
         [HttpGet("ReadById/{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var chapter = await _service.GetChapterByIdAsync(id);
-            if (chapter == null)
+            var lesson = await _service.GetLessonByIdAsync(id);
+            if (lesson == null)
             {
                 return NotFound();
             }
-            return Ok(_mapper.Map<ChapterDto>(chapter));
+            return Ok(_mapper.Map<LessonDto>(lesson));
         }
 
-        [HttpGet("ReadByCourseId/{courseId}")]
-        public async Task<ActionResult<IEnumerable<ChapterDto>>> GetByCourse(int courseId)
+        [HttpGet("ReadByChapterId/{chapterId}")]
+        public async Task<ActionResult<IEnumerable<LessonDto>>> GetByCourse(int chapterId)
         {
-            var chapters = await _service.GetChaptersByCourseIdAsync(courseId);
-            return Ok(chapters);
+            var lessons = await _service.GetLessonsByChapterIdAsync(chapterId);
+            return Ok(lessons);
         }
 
         [Authorize]
         [HttpPost("Create")]
-        public async Task<IActionResult> CreateChapter(ChapterDto chapter)
+        public async Task<IActionResult> CreateLesson(LessonDto lesson)
         {
             var user = await _account.GetCurrentUserAsync();
+            var chapter = await _chapters.GetChapterByIdAsync(lesson.ChapterId);
             var course = await _courses.GetCourseByIdAsync(chapter.CourseId);
             if (user.Id != course.AuthorId)
             {
                 return Forbid();
             }
 
-            var _chapter = _mapper.Map<Chapter>(chapter);
-            return Created("Chapter was created successfully", await _service.CreateChapterAsync(_chapter));
+            var _lesson = _mapper.Map<Lesson>(lesson);
+            return Created("Lesson was created successfully", await _service.CreateLessonAsync(_lesson));
         }
 
         [HttpPatch("Update")]
-        public async Task<IActionResult> UpdateChapter(ChapterDto chapter)
+        public async Task<IActionResult> UpdateLesson(LessonDto lesson)
         {
             var user = await _account.GetCurrentUserAsync();
+            var chapter = await _chapters.GetChapterByIdAsync(lesson.ChapterId);
             var course = await _courses.GetCourseByIdAsync(chapter.CourseId);
             if (user.Id != course.AuthorId)
             {
@@ -72,8 +77,8 @@ namespace csharp_it.Controllers
 
             if (user.Id == course.AuthorId)
             {
-                var _chapter = _mapper.Map<Chapter>(chapter);
-                return StatusCode((int)HttpStatusCode.NoContent, await _service.UpdateChapterAsync(_chapter));
+                var _lesson = _mapper.Map<Lesson>(lesson);
+                return StatusCode((int)HttpStatusCode.NoContent, await _service.UpdateLessonAsync(_lesson));
             }
 
             return Forbid();
@@ -83,13 +88,14 @@ namespace csharp_it.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var user = await _account.GetCurrentUserAsync();
-            var chapter = await _service.GetChapterByIdAsync(id);
+            var lesson = await _service.GetLessonByIdAsync(id);
 
-            if (chapter == null)
+            if (lesson == null)
             {
                 BadRequest();
             }
 
+            var chapter = await _chapters.GetChapterByIdAsync(lesson.ChapterId);
             var course = await _courses.GetCourseByIdAsync(chapter.CourseId);
             if (user.Id != course.AuthorId)
             {

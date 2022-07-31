@@ -22,6 +22,11 @@ namespace csharp_it.Configurations
                 .WithOne(u => u.Task)
                 .HasForeignKey(u => u.TaskId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            builder
+                .HasMany(t => t.Solutions)
+                .WithOne(s => s.Task)
+                .HasForeignKey(s => s.TaskId);
         }
     }
 }

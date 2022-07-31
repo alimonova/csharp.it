@@ -224,7 +224,7 @@ namespace csharp_it.Services
 
             foreach (var userCourse in userCourses)
             {
-                users.Add(_dbcontext.Users.FirstOrDefault(x=>x.Id == userCourse.UserId);
+                users.Add(_dbcontext.Users.FirstOrDefault(x=>x.Id == userCourse.UserId));
             }
 
             return users;

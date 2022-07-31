@@ -56,6 +56,21 @@ namespace csharp_it.Models
                 await _usermanager.AddToRoleAsync(teacher, "TEACHER");
             }
 
+            if (_context.Accesses.Count() == 0)
+            {
+                await _context.Accesses.AddRangeAsync(new Access[] {
+                    new Access { Name = "SEE_QUESTIONS", Description = "Ability to see questions for lessons" },
+                    new Access { Name = "SEE_ANSWERS_AND_CHECK_TEST", Description = "Ability to see variants of answers and check the right answers" },
+                    new Access { Name = "SEE_RIGHT_ANSWERS_EXPLANATIONS", Description = "Ability to see right answers explanations" },
+                    new Access { Name = "SEE_TASKS", Description = "Ability to see tasks for each lesson" },
+                    new Access { Name = "SEE_PRACTICAL_EXAMPLES", Description = "Ability to see practical examples with explanation" },
+                    new Access { Name = "SEE_USEFUL_RESOURCES", Description = "Ability to see links on useful redources" },
+                    new Access { Name = "SEND_TASK_SOLUTIONS_AND_GET_MARKS", Description = "Ability to send one solution per task with getting marks" },
+                    new Access { Name = "HAVE_UNLIMITED_TRIES_TO_SEND_SOLUTIONS", Description = "Ability to send solutions multiple times in case of comments after review" },
+                    new Access { Name = "SEE_RIGHT_SOLUTIONS_WITH_EXPLANATIONS", Description = "Ability to see the right solutions on tasks with explanation" },
+                });
+            }
+
             _context.SaveChanges();
         }
     }

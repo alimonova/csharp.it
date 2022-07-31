@@ -25,6 +25,7 @@ namespace csharp_it.Models
         public List<UserTask> UserTasks { get; set; }
         public List<UserCourse> UserCourses { get; set; }
         public List<Course> Courses { get; set; }
+        public List<Solution> Solutions { get; set; }
 
 		public User()
 		{
@@ -33,6 +34,7 @@ namespace csharp_it.Models
 			UserTasks = new List<UserTask>();
             Courses = new List<Course>();
             UserCourses = new List<UserCourse>();
+            Solutions = new List<Solution>();
 		}
 	}
 }

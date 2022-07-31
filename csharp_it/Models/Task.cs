@@ -13,10 +13,12 @@ namespace csharp_it.Models
 		public string Tips { get; set; }
 
 		public List<UserTask> UserTasks { get; set; }
+		public List<Solution> Solutions { get; set; }
 
 		public Task()
 		{
 			UserTasks = new List<UserTask>();
+			Solutions = new List<Solution>();
 		}
 	}
 }

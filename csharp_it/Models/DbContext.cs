@@ -20,6 +20,7 @@ namespace csharp_it.Models
         public DbSet<UserTask> UserTasks { get; set; }
         public DbSet<Access> Accesses { get; set; }
         public DbSet<TarifAccess> TarifAccesses { get; set; }
+        public DbSet<Solution> Solutions { get; set; }
 
         public DbContext()
         { }
@@ -45,6 +46,7 @@ namespace csharp_it.Models
             modelBuilder.ApplyConfiguration(new UserTaskConfiguration());
             modelBuilder.ApplyConfiguration(new AccessConfiguration());
             modelBuilder.ApplyConfiguration(new TarifAccessConfiguration());
+            modelBuilder.ApplyConfiguration(new SolutionConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
