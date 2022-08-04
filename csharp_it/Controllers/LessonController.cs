@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace csharp_it.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class LessonController : ControllerBase
@@ -48,7 +49,6 @@ namespace csharp_it.Controllers
             return Ok(lessons);
         }
 
-        [Authorize]
         [HttpPost("Create")]
         public async Task<IActionResult> CreateLesson(LessonDto lesson)
         {

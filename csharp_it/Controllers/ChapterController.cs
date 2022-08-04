@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace csharp_it.Controllers
 {
+    [Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class ChapterController : ControllerBase
@@ -45,7 +46,6 @@ namespace csharp_it.Controllers
             return Ok(chapters);
         }
 
-        [Authorize]
         [HttpPost("Create")]
         public async Task<IActionResult> CreateChapter(ChapterDto chapter)
         {

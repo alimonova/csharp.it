@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace csharp_it.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class QuestionController : ControllerBase
@@ -82,7 +83,6 @@ namespace csharp_it.Controllers
             }
         }
 
-        [Authorize]
         [HttpPost("Create")]
         public async Task<IActionResult> CreateQuestion(QuestionDto question)
         {
