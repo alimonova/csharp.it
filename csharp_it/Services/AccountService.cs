@@ -232,11 +232,17 @@ namespace csharp_it.Services
 
         public async Task<bool> CheckAccessToCourse(int courseId, string accessName)
         {
-            var course = await _dbcontext.UserCourses.FirstOrDefaultAsync(x=>x.CourseId == courseId);
+            var course = await _dbcontext.Courses.FirstOrDefaultAsync(x=>x.Id == courseId);
 
             if (course == null)
             {
                 return false;
+            }
+
+            var user = await GetCurrentUserAsync();
+            if (course.AuthorId == user.Id)
+            {
+                return true;
             }
 
             var access = _dbcontext.Accesses.FirstOrDefault(x => x.Name == accessName);
@@ -246,8 +252,16 @@ namespace csharp_it.Services
                 return false;
             }
 
+            var userCourse = await _dbcontext.UserCourses.FirstOrDefaultAsync(
+                x=>x.CourseId == courseId && x.UserId == user.Id);
+
+            if (userCourse == null)
+            {
+                return false;
+            }
+
             var tarifAccess = await _dbcontext.TarifAccesses.FirstOrDefaultAsync(
-                x => x.AccessId == access.Id && x.TarifId == course.Tarif.Id);
+                x => x.AccessId == access.Id && x.TarifId == userCourse.Tarif.Id);
 
             if (tarifAccess == null)
             {
