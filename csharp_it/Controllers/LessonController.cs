@@ -36,14 +36,34 @@ namespace csharp_it.Controllers
             {
                 return NotFound();
             }
-            return Ok(_mapper.Map<LessonDto>(lesson));
+
+            if (await _account.CheckAccessToCourse(lesson.Chapter.Course.Id, "SEE_LESSONS"))
+            {
+                return Ok(_mapper.Map<LessonDto>(lesson));
+            }
+
+            return Forbid();
         }
 
         [HttpGet("ReadByChapterId/{chapterId}")]
         public async Task<ActionResult<IEnumerable<LessonDto>>> GetByChapter(int chapterId)
         {
-            var lessons = await _service.GetLessonsByChapterIdAsync(chapterId);
-            return Ok(_mapper.Map<IEnumerable<LessonDto>>(lessons));
+            var chapter = await _chapters.GetChapterByIdAsync(chapterId);
+
+            if (chapter == null)
+            {
+                return BadRequest();
+            }
+
+            var course = chapter.Course;
+            
+            if (await _account.CheckAccessToCourse(course.Id, "SEE_LESSONS"))
+            {
+                var lessons = await _service.GetLessonsByChapterIdAsync(chapterId);
+                return Ok(_mapper.Map<IEnumerable<LessonDto>>(lessons));
+            }
+
+            return Forbid();
         }
 
         [HttpPost("Create")]
@@ -72,8 +92,6 @@ namespace csharp_it.Controllers
 
             var _lesson = _mapper.Map<Lesson>(lesson);
             return StatusCode((int)HttpStatusCode.NoContent, _mapper.Map<LessonDto>(await _service.UpdateLessonAsync(_lesson)));
-
-            return Forbid();
         }
 
         [HttpDelete("Delete/{id}")]

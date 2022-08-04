@@ -68,6 +68,7 @@ namespace csharp_it.Models
                     new Access { Name = "SEND_TASK_SOLUTIONS_AND_GET_MARKS", Description = "Ability to send one solution per task with getting marks" },
                     new Access { Name = "HAVE_UNLIMITED_TRIES_TO_SEND_SOLUTIONS", Description = "Ability to send solutions multiple times in case of comments after review" },
                     new Access { Name = "SEE_RIGHT_SOLUTIONS_WITH_EXPLANATIONS", Description = "Ability to see the right solutions on tasks with explanation" },
+                    new Access { Name = "SEE_LESSONS", Description = "Ability to see lessons" }
                 });
             }
 

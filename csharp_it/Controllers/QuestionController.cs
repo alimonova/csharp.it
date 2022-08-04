@@ -57,27 +57,27 @@ namespace csharp_it.Controllers
         [HttpGet("ReadByLessonId/{lessonId}")]
         public async Task<ActionResult<IEnumerable<QuestionDto>>> GetByLesson(int lessonId)
         {
-            var questions = await _service.GetQuestionsByLessonIdAsync(lessonId);
+            var lesson = await _lessons.GetLessonByIdAsync(lessonId);
 
-            if (questions == null)
+            if (lesson == null)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            var courseId = questions.First().Lesson.Chapter.CourseId;
+            var course = lesson.Chapter.Course;
 
-            if (await _account.CheckAccessToCourse(courseId, "SEE_RIGHT_ANSWERS_EXPLANATIONS"))
+            if (await _account.CheckAccessToCourse(course.Id, "SEE_RIGHT_ANSWERS_EXPLANATIONS"))
             {
+                var questions = await _service.GetQuestionsByLessonIdAsync(lessonId);
                 return Ok(_mapper.Map<IEnumerable<QuestionDto>>(questions));
             }
-            else if (await _account.CheckAccessToCourse(courseId, "SEE_QUESTIONS"))
+            else if (await _account.CheckAccessToCourse(course.Id, "SEE_QUESTIONS"))
             {
+                var questions = await _service.GetQuestionsByLessonIdAsync(lessonId);
                 return Ok(_mapper.Map<IEnumerable<QuestionNoExplanationDto>>(questions));
             }
-            else
-            {
-                return Forbid();
-            }
+
+            return Forbid();
         }
 
         [HttpPost("Create")]

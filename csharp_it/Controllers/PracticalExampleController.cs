@@ -52,22 +52,22 @@ namespace csharp_it.Controllers
         [HttpGet("ReadByLessonId/{lessonId}")]
         public async Task<ActionResult> GetByLesson(int lessonId)
         {
-            var examples = await _service.GetPracticalExamplesByLessonIdAsync(lessonId);
+            var lesson = await _lessons.GetLessonByIdAsync(lessonId);
 
-            if (examples == null)
+            if (lesson == null)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            if (await _account.CheckAccessToCourse(
-                examples.First().Lesson.Chapter.CourseId, "SEE_PRACTICAL_EXAMPLES"))
+            var course = lesson.Chapter.Course;
+          
+            if (await _account.CheckAccessToCourse(course.Id, "SEE_PRACTICAL_EXAMPLES"))
             {
+                var examples = await _service.GetPracticalExamplesByLessonIdAsync(lessonId);
                 return Ok(_mapper.Map<IEnumerable<PracticalExampleDto>>(examples));
             }
-            else
-            {
-                return Forbid();
-            }
+
+            return Forbid();
         }
 
         [HttpPost("Create")]

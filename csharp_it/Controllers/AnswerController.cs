@@ -55,28 +55,28 @@ namespace csharp_it.Controllers
         public async Task<ActionResult<IEnumerable<AnswerDto>>> GetByQuestion(int questionId)
         {
             var user = await _account.GetCurrentUserAsync();
-            var answers = await _service.GetAnswersByQuestionIdAsync(questionId);
+            var question = await _questions.GetQuestionByIdAsync(questionId);
 
-            if (answers == null)
+            if (question == null)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            var course = answers.First().Question.Lesson.Chapter.Course;
-
-            if (user.Id == course.AuthorId)
+            var course = question.Lesson.Chapter.Course;
+            
+            if (user.Id != course.AuthorId)
             {
+                var answers = await _service.GetAnswersByQuestionIdAsync(questionId);
                 return Ok(_mapper.Map<IEnumerable<AnswerRightDto>>(answers));
             }
             else if (await _account.CheckAccessToCourse(course.Id, "SEE_RIGHT_ANSWERS_EXPLANATIONS")
                 || await _account.CheckAccessToCourse(course.Id, "SEE_ANSWERS_AND_CHECK_TEST"))
             {
+                var answers = await _service.GetAnswersByQuestionIdAsync(questionId);
                 return Ok(_mapper.Map<IEnumerable<AnswerDto>>(answers));
             }
-            else
-            {
-                return Forbid();
-            }
+
+            return Forbid();
         }
 
         [Authorize]
