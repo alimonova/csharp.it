@@ -43,7 +43,7 @@ namespace csharp_it.Controllers
         public async Task<ActionResult<IEnumerable<ChapterDto>>> GetByCourse(int courseId)
         {
             var chapters = await _service.GetChaptersByCourseIdAsync(courseId);
-            return Ok(chapters);
+            return Ok(_mapper.Map<IEnumerable<ChapterDto>>(chapters));
         }
 
         [HttpPost("Create")]
@@ -57,7 +57,7 @@ namespace csharp_it.Controllers
             }
 
             var _chapter = _mapper.Map<Chapter>(chapter);
-            return Created("Chapter was created successfully", await _service.CreateChapterAsync(_chapter));
+            return Created("Chapter was created successfully", _mapper.Map<ChapterDto>(await _service.CreateChapterAsync(_chapter)));
         }
 
         [HttpPatch("Update")]
@@ -73,7 +73,7 @@ namespace csharp_it.Controllers
             if (user.Id == course.AuthorId)
             {
                 var _chapter = _mapper.Map<Chapter>(chapter);
-                return StatusCode((int)HttpStatusCode.NoContent, await _service.UpdateChapterAsync(_chapter));
+                return StatusCode((int)HttpStatusCode.NoContent, _mapper.Map<ChapterDto>(await _service.UpdateChapterAsync(_chapter)));
             }
 
             return Forbid();
@@ -87,7 +87,7 @@ namespace csharp_it.Controllers
 
             if (chapter == null)
             {
-                BadRequest();
+                return BadRequest();
             }
 
             var course = await _courses.GetCourseByIdAsync(chapter.CourseId);

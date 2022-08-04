@@ -8,7 +8,7 @@ namespace csharp_it.Services.Interfaces
         Task<Lesson> CreateLessonAsync(Lesson lesson);
         System.Threading.Tasks.Task DeleteAsync(int id);
         Task<Lesson> GetLessonByIdAsync(int id);
-        Task<IEnumerable<Lesson>> GetLessonsByChapterIdAsync(int lessonId);
+        Task<IEnumerable<Lesson>> GetLessonsByChapterIdAsync(int chapterId);
         Task<Lesson> UpdateLessonAsync(Lesson lesson);
     }
 }

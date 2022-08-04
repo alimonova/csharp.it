@@ -40,10 +40,10 @@ namespace csharp_it.Controllers
         }
 
         [HttpGet("ReadByChapterId/{chapterId}")]
-        public async Task<ActionResult<IEnumerable<LessonDto>>> GetByCourse(int chapterId)
+        public async Task<ActionResult<IEnumerable<LessonDto>>> GetByChapter(int chapterId)
         {
             var lessons = await _service.GetLessonsByChapterIdAsync(chapterId);
-            return Ok(lessons);
+            return Ok(_mapper.Map<IEnumerable<LessonDto>>(lessons));
         }
 
         [HttpPost("Create")]
@@ -57,7 +57,7 @@ namespace csharp_it.Controllers
             }
 
             var _lesson = _mapper.Map<Lesson>(lesson);
-            return Created("Lesson was created successfully", await _service.CreateLessonAsync(_lesson));
+            return Created("Lesson was created successfully", _mapper.Map<LessonDto>(await _service.CreateLessonAsync(_lesson)));
         }
 
         [HttpPatch("Update")]
@@ -71,7 +71,7 @@ namespace csharp_it.Controllers
             }
 
             var _lesson = _mapper.Map<Lesson>(lesson);
-            return StatusCode((int)HttpStatusCode.NoContent, await _service.UpdateLessonAsync(_lesson));
+            return StatusCode((int)HttpStatusCode.NoContent, _mapper.Map<LessonDto>(await _service.UpdateLessonAsync(_lesson)));
 
             return Forbid();
         }
@@ -84,7 +84,7 @@ namespace csharp_it.Controllers
 
             if (lesson == null)
             {
-                BadRequest();
+                return BadRequest();
             }
 
             if (user.Id != lesson.Chapter.Course.AuthorId)

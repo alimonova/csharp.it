@@ -9,7 +9,9 @@ namespace csharp_it.Mappings
     {
         public ApplicationMapping()
         {
+            CreateMap<Access, AccessDto>().ReverseMap();
             CreateMap<Answer, AnswerDto>().ReverseMap();
+            CreateMap<Answer, AnswerRightDto>().ReverseMap();
             CreateMap<Chapter, ChapterDto>().ReverseMap();
             CreateMap<Course, CourseDto>().ReverseMap();
             CreateMap<Lesson, LessonDto>().ReverseMap();

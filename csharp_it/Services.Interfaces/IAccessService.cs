@@ -9,6 +9,7 @@ namespace csharp_it.Services.Interfaces
         System.Threading.Tasks.Task DeleteAsync(int id);
         Task<Access> GetAccessByIdAsync(int id);
         Task<Access> UpdateAccessAsync(Access access);
+        Task<IEnumerable<Access>> GetAccesses();
     }
 }
 

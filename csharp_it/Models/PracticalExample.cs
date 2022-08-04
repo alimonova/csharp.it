@@ -1,4 +1,6 @@
-﻿namespace csharp_it.Models
+﻿using System.Text.Json.Serialization;
+
+namespace csharp_it.Models
 {
 	public class PracticalExample
 	{

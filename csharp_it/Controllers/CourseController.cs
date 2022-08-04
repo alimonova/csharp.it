@@ -33,7 +33,7 @@ namespace csharp_it.Controllers
         public async Task<ActionResult<IEnumerable<CourseDto>>> Get()
         {
             var courses = await _service.GetCoursesAsync();
-            return Ok(courses);
+            return Ok(_mapper.Map<IEnumerable<CourseDto>>(courses));
         }
 
         [HttpGet("ReadById/{id}")]
@@ -60,14 +60,14 @@ namespace csharp_it.Controllers
             }
 
             var channels = await _service.GetCoursesByStudentIdAsync(userId);
-            return Ok(channels);
+            return Ok(_mapper.Map<IEnumerable<CourseDto>>(channels));
         }
 
         [HttpGet("ReadByTeacherId/{teacherId}")]
-        public async Task<ActionResult<IEnumerable<CourseDto>>> GetByTeacher(Guid userId)
+        public async Task<ActionResult<IEnumerable<CourseDto>>> GetByTeacher(Guid teacherId)
         {
-            var channels = await _service.GetCoursesByTeacherIdAsync(userId);
-            return Ok(channels);
+            var channels = await _service.GetCoursesByTeacherIdAsync(teacherId);
+            return Ok(_mapper.Map<IEnumerable<CourseDto>>(channels));
         }
 
         [HttpPost("Create")]
@@ -82,7 +82,8 @@ namespace csharp_it.Controllers
             var user = await _account.GetCurrentUserAsync();
             course.AuthorId = user.Id;
             var _course = _mapper.Map<Course>(course);
-            return Created("Course was created successfully", await _service.CreateCourseAsync(_course));
+            return Created("Course was created successfully",
+                _mapper.Map<CourseDto>(await _service.CreateCourseAsync(_course)));
         }
 
         [HttpPatch("Update")]
@@ -92,7 +93,8 @@ namespace csharp_it.Controllers
             if (user.Id == course.AuthorId)
             {
                 var _course = _mapper.Map<Course>(course);
-                return StatusCode((int)HttpStatusCode.NoContent, await _service.UpdateCourseAsync(_course));
+                return StatusCode((int)HttpStatusCode.NoContent,
+                    _mapper.Map<CourseDto>(await _service.UpdateCourseAsync(_course)));
             }
 
             return Forbid();
@@ -106,7 +108,7 @@ namespace csharp_it.Controllers
 
             if (course == null)
             {
-                BadRequest();
+                return BadRequest();
             }
 
             if (user.Id == course.AuthorId)

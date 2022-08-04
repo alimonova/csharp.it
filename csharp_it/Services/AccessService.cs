@@ -30,6 +30,11 @@ namespace csharp_it.Services
             await _dbcontext.SaveChangesAsync();
         }
 
+        public async Task<IEnumerable<Access>> GetAccesses()
+        {
+            return await _dbcontext.Accesses.ToListAsync();
+        }
+
         public async Task<Access> GetAccessByIdAsync(int id)
         {
             return await _dbcontext.Accesses.FirstOrDefaultAsync(x => x.Id == id);

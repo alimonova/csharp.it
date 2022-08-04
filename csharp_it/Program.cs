@@ -22,11 +22,14 @@ builder.Services.AddCors();
 
 // ---------- START OF builder.Services -----------
 builder.Services.AddTransient<Seeder>();
+builder.Services.AddScoped<IAccessService, AccessService>();
+builder.Services.AddScoped<IAnswerService, AnswerService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<IChapterService, ChapterService>();
 builder.Services.AddScoped<ILessonService, LessonService>();
 builder.Services.AddScoped<IQuestionService, QuestionService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IPracticalExampleService, PracticalExampleService>();
 builder.Services.TryAddScoped<IHttpContextAccessor, HttpContextAccessor>();
 // ---------- END OF builder.Services -----------
 

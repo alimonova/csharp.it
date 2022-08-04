@@ -16,18 +16,15 @@ namespace csharp_it.Controllers
     {
         private readonly IQuestionService _service;
         private readonly IAccountService _account;
-        private readonly ICourseService _courses;
         private readonly ILessonService _lessons;
         private readonly IMapper _mapper;
 
         public QuestionController(IQuestionService service, IMapper mapper,
-            IAccountService account, ICourseService courses,
-            ILessonService lessons)
+            IAccountService account, ILessonService lessons)
         {
             _service = service;
             _mapper = mapper;
             _account = account;
-            _courses = courses;
             _lessons = lessons;
         }
 
@@ -57,7 +54,7 @@ namespace csharp_it.Controllers
             }
         }
 
-        [HttpGet("ReadByLessonId/{courseId}")]
+        [HttpGet("ReadByLessonId/{lessonId}")]
         public async Task<ActionResult<IEnumerable<QuestionDto>>> GetByLesson(int lessonId)
         {
             var questions = await _service.GetQuestionsByLessonIdAsync(lessonId);
@@ -95,7 +92,8 @@ namespace csharp_it.Controllers
             }
 
             var _question = _mapper.Map<Question>(question);
-            return Created("Question was created successfully", await _service.CreateQuestionAsync(_question));
+            return Created("Question was created successfully",
+                _mapper.Map<QuestionDto>(await _service.CreateQuestionAsync(_question)));
         }
 
         [HttpPatch("Update")]
@@ -109,7 +107,8 @@ namespace csharp_it.Controllers
             }
 
             var _question = _mapper.Map<Question>(question);
-            return StatusCode((int)HttpStatusCode.NoContent, await _service.UpdateQuestionAsync(_question));
+            return StatusCode((int)HttpStatusCode.NoContent,
+                _mapper.Map<QuestionDto>(await _service.UpdateQuestionAsync(_question)));
         }
 
         [HttpDelete("Delete/{id}")]
@@ -120,7 +119,7 @@ namespace csharp_it.Controllers
 
             if (question == null)
             {
-                BadRequest();
+                return BadRequest();
             }
 
             if (user.Id != question.Lesson.Chapter.Course.AuthorId)

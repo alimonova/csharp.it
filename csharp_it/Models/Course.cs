@@ -10,7 +10,6 @@ namespace csharp_it.Models
 		public string Name { get; set; }
 		public string Description { get; set; }
 		public Guid AuthorId { get; set; }
-		[JsonIgnore]
 		public virtual User Author { get; set; }
 		public int TasksNum { get; set; }
 		public int SecondsNum { get; set; }

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace csharp_it.Controllers
 {
-	[Authorize(Roles="Admin")]
+	[Authorize(Roles="ADMIN")]
     [Route("api/[controller]")]
     [ApiController]
     public class AccessController : ControllerBase
@@ -21,6 +21,19 @@ namespace csharp_it.Controllers
         {
             _service = service;
             _mapper = mapper;
+        }
+
+        [HttpGet("Read")]
+        public async Task<IActionResult> Get()
+        {
+            var accesses = await _service.GetAccesses();
+
+            if (accesses == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(_mapper.Map<IEnumerable<AccessDto>>(accesses));
         }
 
         [HttpGet("ReadById/{id}")]
@@ -40,14 +53,14 @@ namespace csharp_it.Controllers
         public async Task<IActionResult> CreateAccess(AccessDto access)
         {
             var _access = _mapper.Map<Access>(access);
-            return Created("Access was created successfully", await _service.CreateAccessAsync(_access));
+            return Created("Access was created successfully", _mapper.Map<AccessDto>(await _service.CreateAccessAsync(_access)));
         }
 
         [HttpPatch("Update")]
         public async Task<IActionResult> UpdateAccess(AccessDto access)
         {
             var _access = _mapper.Map<Access>(access);
-            return StatusCode((int)HttpStatusCode.NoContent, await _service.UpdateAccessAsync(_access));
+            return StatusCode((int)HttpStatusCode.NoContent, _mapper.Map<AccessDto>(await _service.UpdateAccessAsync(_access)));
         }
 
         [HttpDelete("Delete/{id}")]
@@ -57,7 +70,7 @@ namespace csharp_it.Controllers
 
             if (access == null)
             {
-                BadRequest();
+                return BadRequest();
             }
 
             await _service.DeleteAsync(id);

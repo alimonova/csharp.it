@@ -40,7 +40,8 @@ namespace csharp_it.Controllers
 
             var courseId = answer.Question.Lesson.Chapter.CourseId;
 
-            if (await _account.CheckAccessToCourse(courseId, "SEE_ANSWERS_AND_CHECK_TEST"))
+            if (await _account.CheckAccessToCourse(courseId, "SEE_RIGHT_ANSWERS_EXPLANATIONS")
+                || await _account.CheckAccessToCourse(courseId, "SEE_ANSWERS_AND_CHECK_TEST"))
             {
                 return Ok(_mapper.Map<AnswerDto>(answer));
             }
@@ -51,8 +52,9 @@ namespace csharp_it.Controllers
         }
 
         [HttpGet("ReadByQuestionId/{questionId}")]
-        public async Task<ActionResult<IEnumerable<AnswerDto>>> GetByLesson(int questionId)
+        public async Task<ActionResult<IEnumerable<AnswerDto>>> GetByQuestion(int questionId)
         {
+            var user = await _account.GetCurrentUserAsync();
             var answers = await _service.GetAnswersByQuestionIdAsync(questionId);
 
             if (answers == null)
@@ -60,9 +62,14 @@ namespace csharp_it.Controllers
                 return NotFound();
             }
 
-            var courseId = answers.First().Question.Lesson.Chapter.CourseId;
+            var course = answers.First().Question.Lesson.Chapter.Course;
 
-            if (await _account.CheckAccessToCourse(courseId, "SEE_ANSWERS_AND_CHECK_TEST"))
+            if (user.Id == course.AuthorId)
+            {
+                return Ok(_mapper.Map<IEnumerable<AnswerRightDto>>(answers));
+            }
+            else if (await _account.CheckAccessToCourse(course.Id, "SEE_RIGHT_ANSWERS_EXPLANATIONS")
+                || await _account.CheckAccessToCourse(course.Id, "SEE_ANSWERS_AND_CHECK_TEST"))
             {
                 return Ok(_mapper.Map<IEnumerable<AnswerDto>>(answers));
             }
@@ -74,7 +81,7 @@ namespace csharp_it.Controllers
 
         [Authorize]
         [HttpPost("Create")]
-        public async Task<IActionResult> CreateAnswer(AnswerDto answer)
+        public async Task<IActionResult> CreateAnswer(AnswerRightDto answer)
         {
             var user = await _account.GetCurrentUserAsync();
             var question = await _questions.GetQuestionByIdAsync(answer.QuestionId);
@@ -85,7 +92,8 @@ namespace csharp_it.Controllers
             }
 
             var _answer = _mapper.Map<Answer>(answer);
-            return Created("Answer was created successfully", await _service.CreateAnswerAsync(_answer));
+            return Created("Answer was created successfully",
+                _mapper.Map<AnswerDto>(await _service.CreateAnswerAsync(_answer)));
         }
 
         [HttpPatch("Update")]
@@ -99,7 +107,8 @@ namespace csharp_it.Controllers
             }
 
             var _answer = _mapper.Map<Answer>(answer);
-            return StatusCode((int)HttpStatusCode.NoContent, await _service.UpdateAnswerAsync(_answer));
+            return StatusCode((int)HttpStatusCode.NoContent,
+                _mapper.Map<AnswerDto>(await _service.UpdateAnswerAsync(_answer)));
         }
 
         [HttpDelete("Delete/{id}")]
@@ -110,7 +119,7 @@ namespace csharp_it.Controllers
 
             if (answer == null)
             {
-                BadRequest();
+                return BadRequest();
             }
 
             if (user.Id != answer.Question.Lesson.Chapter.Course.AuthorId)
@@ -122,7 +131,7 @@ namespace csharp_it.Controllers
             return StatusCode((int)HttpStatusCode.NoContent);
         }
 
-        [HttpPost]
+        [HttpPost("CheckTest")]
         public async Task<double> CheckTest(List<int> answers)
         {
             double mark = await _service.CheckTest(answers);
