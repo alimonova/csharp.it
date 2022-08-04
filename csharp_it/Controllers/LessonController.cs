@@ -16,18 +16,15 @@ namespace csharp_it.Controllers
     {
         private readonly ILessonService _service;
         private readonly IAccountService _account;
-        private readonly ICourseService _courses;
         private readonly IChapterService _chapters;
         private readonly IMapper _mapper;
 
         public LessonController(ILessonService service, IMapper mapper,
-            IAccountService account, ICourseService courses,
-            IChapterService chapters)
+            IAccountService account, IChapterService chapters)
         {
             _service = service;
             _mapper = mapper;
             _account = account;
-            _courses = courses;
             _chapters = chapters;
         }
 

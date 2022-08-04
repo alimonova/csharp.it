@@ -57,7 +57,7 @@ namespace csharp_it.Controllers
             }
         }
 
-        [HttpGet("ReadByCourseId/{courseId}")]
+        [HttpGet("ReadByLessonId/{courseId}")]
         public async Task<ActionResult<IEnumerable<QuestionDto>>> GetByLesson(int lessonId)
         {
             var questions = await _service.GetQuestionsByLessonIdAsync(lessonId);
