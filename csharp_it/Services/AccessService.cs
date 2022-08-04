@@ -23,9 +23,8 @@ namespace csharp_it.Services
             return access;
         }
 
-        public async System.Threading.Tasks.Task DeleteAsync(int id)
+        public async System.Threading.Tasks.Task DeleteAsync(Access access)
         {
-            var access = await GetAccessByIdAsync(id);
             _dbcontext.Remove(access);
             await _dbcontext.SaveChangesAsync();
         }

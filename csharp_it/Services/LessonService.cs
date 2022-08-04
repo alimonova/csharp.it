@@ -23,9 +23,8 @@ namespace csharp_it.Services
             return lesson;
         }
 
-        public async System.Threading.Tasks.Task DeleteAsync(int id)
+        public async System.Threading.Tasks.Task DeleteAsync(Lesson lesson)
         {
-            var lesson = await GetLessonByIdAsync(id);
             _dbcontext.Remove(lesson);
             await _dbcontext.SaveChangesAsync();
         }

@@ -27,9 +27,8 @@ namespace csharp_it.Services
             return course;
         }
 
-        public async System.Threading.Tasks.Task DeleteAsync(int id)
+        public async System.Threading.Tasks.Task DeleteAsync(Course course)
         {
-            var course = await GetCourseByIdAsync(id);
             _dbcontext.Remove(course);
             await _dbcontext.SaveChangesAsync();
         }

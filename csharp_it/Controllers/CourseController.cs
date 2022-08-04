@@ -113,7 +113,7 @@ namespace csharp_it.Controllers
 
             if (user.Id == course.AuthorId)
             {
-                await _service.DeleteAsync(id);
+                await _service.DeleteAsync(course);
                 return StatusCode((int)HttpStatusCode.NoContent);
             }
 

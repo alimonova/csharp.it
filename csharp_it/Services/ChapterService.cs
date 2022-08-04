@@ -23,9 +23,8 @@ namespace csharp_it.Services
             return chapter;
         }
 
-        public async System.Threading.Tasks.Task DeleteAsync(int id)
+        public async System.Threading.Tasks.Task DeleteAsync(Chapter chapter)
         {
-            var chapter = await GetChapterByIdAsync(id);
             _dbcontext.Remove(chapter);
             await _dbcontext.SaveChangesAsync();
         }

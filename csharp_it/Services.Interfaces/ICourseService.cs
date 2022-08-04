@@ -8,7 +8,7 @@ namespace csharp_it.Services.Interfaces
 	public interface ICourseService
 	{
         Task<Course> CreateCourseAsync(Course course);
-        System.Threading.Tasks.Task DeleteAsync(int id);
+        System.Threading.Tasks.Task DeleteAsync(Course course);
         Task<Course> GetCourseByIdAsync(int id);
         Task<IEnumerable<Course>> GetCoursesAsync();
         Task<IEnumerable<Course>> GetCoursesByStudentIdAsync(Guid studentId);

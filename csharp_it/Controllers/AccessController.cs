@@ -73,7 +73,7 @@ namespace csharp_it.Controllers
                 return BadRequest();
             }
 
-            await _service.DeleteAsync(id);
+            await _service.DeleteAsync(access);
             return StatusCode((int)HttpStatusCode.NoContent);
         }
     }

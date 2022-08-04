@@ -96,7 +96,7 @@ namespace csharp_it.Controllers
                 return Forbid();
             }
 
-            await _service.DeleteAsync(id);
+            await _service.DeleteAsync(chapter);
             return StatusCode((int)HttpStatusCode.NoContent);
         }
     }
