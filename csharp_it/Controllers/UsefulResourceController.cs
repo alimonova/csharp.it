@@ -12,14 +12,14 @@ namespace csharp_it.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class PracticalExampleController : ControllerBase
+    public class UsefulResourceController : ControllerBase
     {
-        private readonly IPracticalExampleService _service;
+        private readonly IUsefulResourceService _service;
         private readonly IAccountService _account;
         private readonly ILessonService _lessons;
         private readonly IMapper _mapper;
 
-        public PracticalExampleController(IPracticalExampleService service, IMapper mapper,
+        public UsefulResourceController(IUsefulResourceService service, IMapper mapper,
             IAccountService account, ILessonService lessons)
         {
             _service = service;
@@ -31,17 +31,17 @@ namespace csharp_it.Controllers
         [HttpGet("ReadById/{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var example = await _service.GetPracticalExampleByIdAsync(id);
+            var resource = await _service.GetUsefulResourceByIdAsync(id);
 
-            if (example == null)
+            if (resource == null)
             {
                 return NotFound();
             }
 
             if (await _account.CheckAccessToCourse(
-                example.Lesson.Chapter.CourseId, "SEE_PRACTICAL_EXAMPLES"))
+                resource.Lesson.Chapter.CourseId, "SEE_USEFUL_RESOURCES"))
             {
-                return Ok(_mapper.Map<PracticalExampleDto>(example));
+                return Ok(_mapper.Map<UsefulResourceDto>(resource));
             }
             else
             {
@@ -52,17 +52,17 @@ namespace csharp_it.Controllers
         [HttpGet("ReadByLessonId/{lessonId}")]
         public async Task<ActionResult> GetByLesson(int lessonId)
         {
-            var examples = await _service.GetPracticalExamplesByLessonIdAsync(lessonId);
+            var resources = await _service.GetUsefulResourcesByLessonIdAsync(lessonId);
 
-            if (examples == null)
+            if (resources.FirstOrDefault() == null)
             {
                 return NotFound();
             }
 
             if (await _account.CheckAccessToCourse(
-                examples.First().Lesson.Chapter.CourseId, "SEE_PRACTICAL_EXAMPLES"))
+                resources.First().Lesson.Chapter.CourseId, "SEE_USEFUL_RESOURCES"))
             {
-                return Ok(_mapper.Map<IEnumerable<PracticalExampleDto>>(examples));
+                return Ok(_mapper.Map<IEnumerable<UsefulResourceDto>>(resources));
             }
             else
             {
@@ -71,10 +71,10 @@ namespace csharp_it.Controllers
         }
 
         [HttpPost("Create")]
-        public async Task<IActionResult> CreatePracticalExample(PracticalExampleDto example)
+        public async Task<IActionResult> CreateUsefulResource(UsefulResourceDto resource)
         {
             var user = await _account.GetCurrentUserAsync();
-            var lesson = await _lessons.GetLessonByIdAsync(example.LessonId);
+            var lesson = await _lessons.GetLessonByIdAsync(resource.LessonId);
 
             if (lesson == null)
             {
@@ -87,43 +87,43 @@ namespace csharp_it.Controllers
                 return Forbid();
             }
 
-            var _example = _mapper.Map<PracticalExample>(example);
-            return Created("PracticalExample was created successfully",
-                _mapper.Map<PracticalExampleDto>(await _service.CreatePracticalExampleAsync(_example)));
+            var _resource = _mapper.Map<UsefulResource>(resource);
+            return Created("UsefulResource was created successfully",
+                _mapper.Map<UsefulResourceDto>(await _service.CreateUsefulResourceAsync(_resource)));
         }
 
         [HttpPatch("Update")]
-        public async Task<IActionResult> UpdatePracticalExample(PracticalExampleDto example)
+        public async Task<IActionResult> UpdateUsefulResource(UsefulResourceDto resource)
         {
             var user = await _account.GetCurrentUserAsync();
-            var lesson = await _lessons.GetLessonByIdAsync(example.LessonId);
+            var lesson = await _lessons.GetLessonByIdAsync(resource.LessonId);
             if (user.Id != lesson.Chapter.Course.AuthorId)
             {
                 return Forbid();
             }
 
-            var _example = _mapper.Map<PracticalExample>(example);
+            var _resource = _mapper.Map<UsefulResource>(resource);
             return StatusCode((int)HttpStatusCode.NoContent,
-                _mapper.Map<PracticalExampleDto>(await _service.UpdatePracticalExampleAsync(_example)));
+                _mapper.Map<UsefulResourceDto>(await _service.UpdateUsefulResourceAsync(_resource)));
         }
 
         [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var user = await _account.GetCurrentUserAsync();
-            var example = await _service.GetPracticalExampleByIdAsync(id);
+            var resource = await _service.GetUsefulResourceByIdAsync(id);
 
-            if (example == null)
+            if (resource == null)
             {
                 return BadRequest();
             }
 
-            if (user.Id != example.Lesson.Chapter.Course.AuthorId)
+            if (user.Id != resource.Lesson.Chapter.Course.AuthorId)
             {
                 return Forbid();
             }
 
-            await _service.DeleteAsync(example);
+            await _service.DeleteAsync(resource);
             return StatusCode((int)HttpStatusCode.NoContent);
         }
     }

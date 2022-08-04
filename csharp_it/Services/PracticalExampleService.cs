@@ -23,9 +23,8 @@ namespace csharp_it.Services
             return example;
         }
 
-        public async System.Threading.Tasks.Task DeleteAsync(int id)
+        public async System.Threading.Tasks.Task DeleteAsync(PracticalExample example)
         {
-            var example = await GetPracticalExampleByIdAsync(id);
             _dbcontext.Remove(example);
             await _dbcontext.SaveChangesAsync();
         }
