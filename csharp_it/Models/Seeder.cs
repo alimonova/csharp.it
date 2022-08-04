@@ -54,7 +54,7 @@ namespace csharp_it.Models
 
                 await _usermanager.CreateAsync(teacher, "s3cr3tKf0rC#1TAl1m0n0vaT3ach3r");
                 await _usermanager.AddToRoleAsync(teacher, "TEACHER");
-            }
+            }   
 
             if (_context.Accesses.Count() == 0)
             {

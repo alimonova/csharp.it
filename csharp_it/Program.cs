@@ -30,6 +30,7 @@ builder.Services.AddScoped<ILessonService, LessonService>();
 builder.Services.AddScoped<IQuestionService, QuestionService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ITarifService, TarifService>();
+builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<IPracticalExampleService, PracticalExampleService>();
 builder.Services.AddScoped<IUsefulResourceService, UsefulResourceService>();
 builder.Services.TryAddScoped<IHttpContextAccessor, HttpContextAccessor>();

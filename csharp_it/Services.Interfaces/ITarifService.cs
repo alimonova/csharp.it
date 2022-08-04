@@ -10,7 +10,7 @@ namespace csharp_it.Services.Interfaces
         Task<Tarif> GetTarifByIdAsync(Guid id);
         Task<IEnumerable<Tarif>> GetTarifsByCourseIdAsync(int courseId);
         Task<TarifAccess> AddAccessToTarifAsync(Guid tarifId, int accessId);
-        Task<TarifAccess> GetTarifAccessAsync(Guid tarifId, int accessId)
+        Task<TarifAccess> GetTarifAccessAsync(Guid tarifId, int accessId);
         System.Threading.Tasks.Task RemoveAccessFromTarifAsync(TarifAccess tarifAccess);
     }
 }

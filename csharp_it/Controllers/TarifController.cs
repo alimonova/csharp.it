@@ -100,7 +100,7 @@ namespace csharp_it.Controllers
             return Ok("TarifAccess was created successfully");
         }
 
-        [HttpDelete("Delete/{id}")]
+        [HttpDelete("RemoveAccessFromTarif/{tarifId}/{accessId}")]
         public async Task<IActionResult> RemoveAccessFromTarif(Guid tarifId, int accessId)
         {
             var user = await _account.GetCurrentUserAsync();
