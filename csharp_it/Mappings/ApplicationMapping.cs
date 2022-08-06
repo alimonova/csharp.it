@@ -24,6 +24,8 @@ namespace csharp_it.Mappings
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<UserCourse, UserCourseDto>().ReverseMap();
             CreateMap<UserTask, UserTaskDto>().ReverseMap();
+            CreateMap<Solution, SolutionDto>().ReverseMap();
+            CreateMap<Solution, SolutionCreationDto>().ReverseMap();
         }
     }
 }

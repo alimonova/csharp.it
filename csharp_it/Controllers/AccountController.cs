@@ -38,7 +38,7 @@ namespace csharp_it.Controllers
         }
 
         [HttpPost("Registration")]
-        public async Task<IActionResult> Register(UserRegistration model)
+        public async Task<IActionResult> Register([FromBody] UserRegistration model)
         {
             if (ModelState.IsValid)
             {
@@ -49,7 +49,7 @@ namespace csharp_it.Controllers
                     return BadRequest(result.Errors);
                 }
 
-                return Created("", "Пользователь успешно создан.");
+                return Created("", result);
             }
             else
             {
@@ -76,7 +76,7 @@ namespace csharp_it.Controllers
         }
 
         [HttpPost("Authentication")]
-        public async Task<IActionResult> Authenticate(UserAuthorization model)
+        public async Task<IActionResult> Authenticate([FromBody] UserAuthorization model)
         {
             var jwt = await _service.Authenticate(model);
 

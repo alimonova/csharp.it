@@ -6,7 +6,7 @@ namespace csharp_it.Services.Interfaces
 {
 	public interface ITaskService
 	{
-        Task<Task> CreateTaskAsync(Task question);
+        Task<Task> CreateTaskAsync(Task task);
         System.Threading.Tasks.Task DeleteAsync(Task task);
         Task<Task> GetTaskByIdAsync(int id);
         Task<IEnumerable<Task>> GetTasksByLessonIdAsync(int lessonId);
