@@ -10,6 +10,20 @@ namespace csharp_it.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Accesses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Accesses", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
@@ -62,6 +76,7 @@ namespace csharp_it.Migrations
                     LastBotMessage = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Avatar = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    WalletMoney = table.Column<double>(type: "float", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -173,6 +188,26 @@ namespace csharp_it.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Teachers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Teachers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Teachers_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Courses",
                 columns: table => new
                 {
@@ -180,19 +215,22 @@ namespace csharp_it.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TeacherId = table.Column<int>(type: "int", nullable: false),
                     TasksNum = table.Column<int>(type: "int", nullable: false),
-                    SecondsNum = table.Column<int>(type: "int", nullable: false)
+                    SecondsNum = table.Column<int>(type: "int", nullable: false),
+                    MinPrice = table.Column<double>(type: "float", nullable: false),
+                    MaxPrice = table.Column<double>(type: "float", nullable: false),
+                    Duration = table.Column<int>(type: "int", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Courses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Courses_AspNetUsers_AuthorId",
-                        column: x => x.AuthorId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_Courses_Teachers_TeacherId",
+                        column: x => x.TeacherId,
+                        principalTable: "Teachers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -223,11 +261,14 @@ namespace csharp_it.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CourseId = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<double>(type: "float", nullable: false),
-                    Currency = table.Column<int>(type: "int", nullable: false),
+                    PriceMonth = table.Column<double>(type: "float", nullable: false),
+                    PriceYear = table.Column<double>(type: "float", nullable: false),
+                    FullPrice = table.Column<double>(type: "float", nullable: false),
+                    OnceBilling = table.Column<bool>(type: "bit", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Access = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Popular = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -264,15 +305,40 @@ namespace csharp_it.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TarifAccesses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TarifId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AccessId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TarifAccesses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TarifAccesses_Accesses_AccessId",
+                        column: x => x.AccessId,
+                        principalTable: "Accesses",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_TarifAccesses_Tarifs_TarifId",
+                        column: x => x.TarifId,
+                        principalTable: "Tarifs",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserCourses",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Progress = table.Column<double>(type: "float", nullable: false),
-                    CourseId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TarifId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    TarifId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Expiration = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CurrentLessonNumber = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -283,11 +349,6 @@ namespace csharp_it.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserCourses_Courses_CourseId",
-                        column: x => x.CourseId,
-                        principalTable: "Courses",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_UserCourses_Tarifs_TarifId",
                         column: x => x.TarifId,
@@ -312,6 +373,28 @@ namespace csharp_it.Migrations
                     table.PrimaryKey("PK_PracticalExamples", x => x.Id);
                     table.ForeignKey(
                         name: "FK_PracticalExamples_Lessons_LessonId",
+                        column: x => x.LessonId,
+                        principalTable: "Lessons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Questions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Number = table.Column<int>(type: "int", nullable: false),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Explanation = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LessonId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Questions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Questions_Lessons_LessonId",
                         column: x => x.LessonId,
                         principalTable: "Lessons",
                         principalColumn: "Id",
@@ -364,6 +447,53 @@ namespace csharp_it.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Answers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    QuestionId = table.Column<int>(type: "int", nullable: false),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RightAnswer = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Answers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Answers_Questions_QuestionId",
+                        column: x => x.QuestionId,
+                        principalTable: "Questions",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Solutions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TaskId = table.Column<int>(type: "int", nullable: false),
+                    Link = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AttemptNumber = table.Column<int>(type: "int", nullable: false),
+                    Mark = table.Column<double>(type: "float", nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Solutions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Solutions_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Solutions_Tasks_TaskId",
+                        column: x => x.TaskId,
+                        principalTable: "Tasks",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserTasks",
                 columns: table => new
                 {
@@ -396,50 +526,6 @@ namespace csharp_it.Migrations
                         column: x => x.TaskId,
                         principalTable: "Tasks",
                         principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Answers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    QuestionId = table.Column<int>(type: "int", nullable: false),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Answers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Questions",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Number = table.Column<int>(type: "int", nullable: false),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Explanation = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RightAnswerId = table.Column<int>(type: "int", nullable: false),
-                    RightAnswerId1 = table.Column<int>(type: "int", nullable: false),
-                    LessonId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Questions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Questions_Answers_RightAnswerId1",
-                        column: x => x.RightAnswerId1,
-                        principalTable: "Answers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Questions_Lessons_LessonId",
-                        column: x => x.LessonId,
-                        principalTable: "Lessons",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -497,9 +583,9 @@ namespace csharp_it.Migrations
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Courses_AuthorId",
+                name: "IX_Courses_TeacherId",
                 table: "Courses",
-                column: "AuthorId");
+                column: "TeacherId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Lessons_ChapterId",
@@ -517,9 +603,24 @@ namespace csharp_it.Migrations
                 column: "LessonId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Questions_RightAnswerId1",
-                table: "Questions",
-                column: "RightAnswerId1");
+                name: "IX_Solutions_TaskId",
+                table: "Solutions",
+                column: "TaskId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Solutions_UserId",
+                table: "Solutions",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TarifAccesses_AccessId",
+                table: "TarifAccesses",
+                column: "AccessId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TarifAccesses_TarifId",
+                table: "TarifAccesses",
+                column: "TarifId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tarifs_CourseId",
@@ -532,14 +633,15 @@ namespace csharp_it.Migrations
                 column: "LessonId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Teachers_UserId",
+                table: "Teachers",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UsefulResources_LessonId",
                 table: "UsefulResources",
                 column: "LessonId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserCourses_CourseId",
-                table: "UserCourses",
-                column: "CourseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserCourses_TarifId",
@@ -565,20 +667,12 @@ namespace csharp_it.Migrations
                 name: "IX_UserTasks_TeacherId",
                 table: "UserTasks",
                 column: "TeacherId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Answers_Questions_QuestionId",
-                table: "Answers",
-                column: "QuestionId",
-                principalTable: "Questions",
-                principalColumn: "Id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Answers_Questions_QuestionId",
-                table: "Answers");
+            migrationBuilder.DropTable(
+                name: "Answers");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -599,6 +693,12 @@ namespace csharp_it.Migrations
                 name: "PracticalExamples");
 
             migrationBuilder.DropTable(
+                name: "Solutions");
+
+            migrationBuilder.DropTable(
+                name: "TarifAccesses");
+
+            migrationBuilder.DropTable(
                 name: "UsefulResources");
 
             migrationBuilder.DropTable(
@@ -608,16 +708,16 @@ namespace csharp_it.Migrations
                 name: "UserTasks");
 
             migrationBuilder.DropTable(
+                name: "Questions");
+
+            migrationBuilder.DropTable(
+                name: "Accesses");
+
+            migrationBuilder.DropTable(
                 name: "Tarifs");
 
             migrationBuilder.DropTable(
                 name: "Tasks");
-
-            migrationBuilder.DropTable(
-                name: "Questions");
-
-            migrationBuilder.DropTable(
-                name: "Answers");
 
             migrationBuilder.DropTable(
                 name: "Lessons");
@@ -627,6 +727,9 @@ namespace csharp_it.Migrations
 
             migrationBuilder.DropTable(
                 name: "Courses");
+
+            migrationBuilder.DropTable(
+                name: "Teachers");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

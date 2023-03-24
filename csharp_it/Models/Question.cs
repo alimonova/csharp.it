@@ -8,6 +8,7 @@ namespace csharp_it.Models
 		public int Number { get; set; }
 		public string Text { get; set; }
 		public string Explanation { get; set; }
+		public bool Multiple { get; set; }
 		public int LessonId { get; set; }
 		public virtual Lesson Lesson { get; set; }
 

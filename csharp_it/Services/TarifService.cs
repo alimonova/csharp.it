@@ -26,10 +26,26 @@ namespace csharp_it.Services
 
         public async Task<Tarif> CreateTarifAsync(Tarif tarif)
         {
+            tarif.Id = Guid.NewGuid();
             await _dbcontext.Tarifs.AddAsync(tarif);
             await _dbcontext.SaveChangesAsync();
 
             return tarif;
+        }
+
+        public async Task<List<TarifAccess>> CreateTarifAccessesAsync(Guid tarifId, IEnumerable<int> accesses)
+        {
+            var tarifAccesses = new List<TarifAccess>();
+
+            foreach (var access in accesses)
+            {
+                tarifAccesses.Add(new TarifAccess { AccessId = access, TarifId = tarifId });
+            }
+
+            await _dbcontext.TarifAccesses.AddRangeAsync(tarifAccesses);
+            await _dbcontext.SaveChangesAsync();
+
+            return tarifAccesses;
         }
 
         public async System.Threading.Tasks.Task DeleteAsync(Tarif tarif)
@@ -52,7 +68,7 @@ namespace csharp_it.Services
         public async Task<IEnumerable<Tarif>> GetTarifsByCourseIdAsync(int courseId)
         {
             return await _dbcontext.Tarifs.Where(x => x.CourseId == courseId)
-                .OrderBy(x => x.Price).ToListAsync();
+                .OrderBy(x => x.PriceMonth).ToListAsync();
         }
 
         public async System.Threading.Tasks.Task RemoveAccessFromTarifAsync(TarifAccess tarifAccess)

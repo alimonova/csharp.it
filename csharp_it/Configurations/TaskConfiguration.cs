@@ -15,7 +15,6 @@ namespace csharp_it.Configurations
 
             builder.Property(t => t.Text).IsRequired();
             builder.Property(t => t.Number).IsRequired();
-            builder.Property(t => t.Example).IsRequired();
 
             builder
                 .HasMany(t => t.UserTasks)

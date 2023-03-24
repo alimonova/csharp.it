@@ -28,14 +28,14 @@ namespace csharp_it.Configurations
                 .HasForeignKey(ug => ug.UserId);
 
             builder
-                .HasMany(u => u.Courses)
-                .WithOne(c => c.Author)
-                .HasForeignKey(c => c.AuthorId);
-
-            builder
                 .HasMany(u => u.Solutions)
                 .WithOne(s => s.User)
                 .HasForeignKey(s => s.UserId);
+
+            builder
+                .HasOne(u => u.Teacher)
+                .WithOne(t => t.User)
+                .HasForeignKey<Teacher>(t => t.UserId);
         }
     }
 }

@@ -36,16 +36,23 @@ builder.Services.AddScoped<IUsefulResourceService, UsefulResourceService>();
 builder.Services.TryAddScoped<IHttpContextAccessor, HttpContextAccessor>();
 // ---------- END OF builder.Services -----------
 
+// ---------- START OF Services for Email sender -----------
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
+// ---------- END OF Services for Email sender -----------
+
 builder.Services.AddHttpClient();
 
 // ---------- START OF IDENTITY -----------
-builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<csharp_it.Models.DbContext>();
+builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<csharp_it.Models.DbContext>()
+    .AddTokenProvider<DataProtectorTokenProvider<User>>(TokenOptions.DefaultProvider);
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
     options.Password.RequireDigit = true;
-    options.Password.RequireUppercase = false;
+    options.Password.RequireUppercase = true;
     options.Password.RequireLowercase = true;
+    options.Password.RequiredLength = 8;
     options.Password.RequireNonAlphanumeric = false;
 });
 // ---------- END OF IDENTITY -----------

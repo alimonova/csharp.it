@@ -17,7 +17,8 @@ namespace csharp_it.Configurations
             builder
                 .HasMany(c => c.Lessons)
                 .WithOne(l => l.Chapter)
-                .HasForeignKey(l => l.ChapterId);
+                .HasForeignKey(l => l.ChapterId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

@@ -4,23 +4,23 @@
 
 namespace csharp_it.Migrations
 {
-    public partial class WalletMoneyColumnmWasAdded : Migration
+    public partial class TarifPaidAdded : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<double>(
-                name: "WalletMoney",
-                table: "AspNetUsers",
-                type: "float",
+            migrationBuilder.AddColumn<bool>(
+                name: "Paid",
+                table: "UserCourses",
+                type: "bit",
                 nullable: false,
-                defaultValue: 0.0);
+                defaultValue: false);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "WalletMoney",
-                table: "AspNetUsers");
+                name: "Paid",
+                table: "UserCourses");
         }
     }
 }

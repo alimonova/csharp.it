@@ -21,10 +21,10 @@ namespace csharp_it.Models
         public string? Avatar { get; set; }
         public string? Description { get; set; }
         public double WalletMoney { get; set; }
+        public virtual Teacher Teacher { get; set; }
 
         public virtual List<UserTask> UserTasks { get; set; }
         public virtual List<UserCourse> UserCourses { get; set; }
-        public virtual List<Course> Courses { get; set; }
         public virtual List<Solution> Solutions { get; set; }
 
 		public User()
@@ -32,7 +32,6 @@ namespace csharp_it.Models
             Blocked = false;
 
 			UserTasks = new List<UserTask>();
-            Courses = new List<Course>();
             UserCourses = new List<UserCourse>();
             Solutions = new List<Solution>();
 		}

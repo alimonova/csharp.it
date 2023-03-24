@@ -12,6 +12,7 @@ namespace csharp_it.Services.Interfaces
         Task<TarifAccess> AddAccessToTarifAsync(Guid tarifId, int accessId);
         Task<TarifAccess> GetTarifAccessAsync(Guid tarifId, int accessId);
         System.Threading.Tasks.Task RemoveAccessFromTarifAsync(TarifAccess tarifAccess);
+        Task<List<TarifAccess>> CreateTarifAccessesAsync(Guid tarifId, IEnumerable<int> accesses);
     }
 }
 

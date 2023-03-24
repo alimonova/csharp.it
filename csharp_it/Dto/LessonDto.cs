@@ -8,6 +8,7 @@
 		public string Topic { get; set; }
 		public string ContentLink { get; set; }
 		public string VideoLink { get; set; }
+		public string Description { get; set; }
 	}
 }
 

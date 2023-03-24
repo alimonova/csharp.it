@@ -41,7 +41,7 @@ namespace csharp_it.Controllers
 
             var course = solution.Task.Lesson.Chapter.Course;
 
-            if (course.AuthorId != user.Id && solution.UserId != user.Id)
+            if (course.Teacher.UserId != user.Id && solution.UserId != user.Id)
             {
                 return Forbid();
             }
@@ -63,7 +63,7 @@ namespace csharp_it.Controllers
 
             var course = task.Lesson.Chapter.Course;
 
-            if (course.AuthorId != user.Id)
+            if (course.Teacher.UserId != user.Id)
             {
                 return Forbid();
             }
@@ -149,7 +149,7 @@ namespace csharp_it.Controllers
 
             var course = solution.Task.Lesson.Chapter.Course;
 
-            if (course.AuthorId != user.Id)
+            if (course.Teacher.UserId != user.Id)
             {
                 return Forbid();
             }
@@ -175,7 +175,7 @@ namespace csharp_it.Controllers
 
             var course = solution.Task.Lesson.Chapter.Course;
 
-            if (course.AuthorId != user.Id)
+            if (course.Teacher.UserId != user.Id)
             {
                 return Forbid();
             }

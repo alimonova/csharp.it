@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+  coursedb:
+    container_name: coursedb
+    environment:
+        SA_PASSWORD: 's3cr3tKf0rC#1Tal1m0n0va'
+        ACCEPT_EULA: 'Y'
+    restart: always
+    ports:
+        - "1433:1433"
+
+  csharp_it:
+    container_name: csharp_it
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ConnectionStrings:DefaultConnection=Server=coursedb;Database=CoursesDb;User Id=sa;Password=s3cr3tKf0rC#1Tal1m0n0va;TrustServerCertificate=True"
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - coursedb
+    ports:
+      - "80"
+      - "443"
+    volumes:
+      - ~/.aspnet/https:/root/.aspnet/https:ro
+      - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro

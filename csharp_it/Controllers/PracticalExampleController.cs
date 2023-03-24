@@ -82,7 +82,7 @@ namespace csharp_it.Controllers
             }
 
             var course = lesson.Chapter.Course;
-            if (user.Id != course.AuthorId)
+            if (user.Id != course.Teacher.UserId)
             {
                 return Forbid();
             }
@@ -97,7 +97,7 @@ namespace csharp_it.Controllers
         {
             var user = await _account.GetCurrentUserAsync();
             var lesson = await _lessons.GetLessonByIdAsync(example.LessonId);
-            if (user.Id != lesson.Chapter.Course.AuthorId)
+            if (user.Id != lesson.Chapter.Course.Teacher.UserId)
             {
                 return Forbid();
             }
@@ -118,7 +118,7 @@ namespace csharp_it.Controllers
                 return BadRequest();
             }
 
-            if (user.Id != example.Lesson.Chapter.Course.AuthorId)
+            if (user.Id != example.Lesson.Chapter.Course.Teacher.UserId)
             {
                 return Forbid();
             }

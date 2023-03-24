@@ -64,7 +64,7 @@ namespace csharp_it.Controllers
 
             var course = question.Lesson.Chapter.Course;
             
-            if (user.Id != course.AuthorId)
+            if (user.Id != course.Teacher.UserId)
             {
                 var answers = await _service.GetAnswersByQuestionIdAsync(questionId);
                 return Ok(_mapper.Map<IEnumerable<AnswerRightDto>>(answers));
@@ -86,7 +86,7 @@ namespace csharp_it.Controllers
             var user = await _account.GetCurrentUserAsync();
             var question = await _questions.GetQuestionByIdAsync(answer.QuestionId);
             var course = question.Lesson.Chapter.Course;
-            if (user.Id != course.AuthorId)
+            if (user.Id != course.Teacher.UserId)
             {
                 return Forbid();
             }
@@ -101,7 +101,7 @@ namespace csharp_it.Controllers
         {
             var user = await _account.GetCurrentUserAsync();
             var question = await _questions.GetQuestionByIdAsync(answer.QuestionId);
-            if (user.Id != question.Lesson.Chapter.Course.AuthorId)
+            if (user.Id != question.Lesson.Chapter.Course.Teacher.UserId)
             {
                 return Forbid();
             }
@@ -122,20 +122,13 @@ namespace csharp_it.Controllers
                 return BadRequest();
             }
 
-            if (user.Id != answer.Question.Lesson.Chapter.Course.AuthorId)
+            if (user.Id != answer.Question.Lesson.Chapter.Course.Teacher.UserId)
             {
                 return Forbid();
             }
 
             await _service.DeleteAsync(answer);
             return StatusCode((int)HttpStatusCode.NoContent);
-        }
-
-        [HttpPost("CheckTest")]
-        public async Task<double> CheckTest(List<int> answers)
-        {
-            double mark = await _service.CheckTest(answers);
-            return mark;
         }
     }
 }

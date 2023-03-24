@@ -16,6 +16,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Task = csharp_it.Models.Task;
+using System.Web;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace csharp_it.Services
 {
@@ -54,6 +56,11 @@ namespace csharp_it.Services
             return currentUser;
         }
 
+        public async Task<User> GetUserByEmailAsync(string email)
+        {
+            return await _userManager.FindByEmailAsync(email);
+        }
+
         public async Task<IdentityResult> Register(UserRegistration model)
         {
             var user = new User
@@ -70,6 +77,19 @@ namespace csharp_it.Services
             await _dbcontext.SaveChangesAsync();
 
             return result;
+        }
+
+        public async Task<bool> CheckEmailConfirmationAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            bool confirmed = await _userManager.IsEmailConfirmedAsync(user);
+            return confirmed;
         }
 
         public async Task<JwtSecurityToken> Authenticate(UserAuthorization model)
@@ -127,20 +147,19 @@ namespace csharp_it.Services
             return await _userManager.GetRolesAsync(user);
         }
 
-        public async Task<User> UpdateAccountWallet(double sum)
+        public async Task<double> UpdateAccountWallet(double sum)
         {
-            currentUser.WalletMoney += sum;
+            var user = await GetCurrentUserAsync();
+            user.WalletMoney += sum;
 
             if (currentUser.WalletMoney < 0)
             {
-                return null;
+                return -1;
             }
 
-            _dbcontext.Users.Attach(currentUser);
-            _dbcontext.Entry(currentUser).Property(x => x.WalletMoney).IsModified = true;
             await _dbcontext.SaveChangesAsync();
 
-            return currentUser;
+            return user.WalletMoney;
         }
 
         public Transaction[] GetTransactions()
@@ -195,36 +214,47 @@ namespace csharp_it.Services
             return null;
         }
 
-        public async Task<UserCourse> BuyCourse(Guid tarifId)
+        public async Task<double> BuyCourse(Guid tarifId, bool month = true)
         {
             var tarif = await _dbcontext.Tarifs.FirstOrDefaultAsync(x => x.Id == tarifId);
 
             if (tarif == null)
             {
-                return null;
+                return -1;
             }
 
-            var userCourse = new UserCourse { CourseId = tarif.CourseId, TarifId = tarif.Id };
+            var exp = month ? DateTime.Now.AddMonths(1) : DateTime.Now.AddYears(1);
+
+            var user = await GetCurrentUserAsync();
+            var userCourse = new UserCourse { TarifId = tarif.Id,
+                UserId = user.Id, Expiration = DateTime.Now,
+                Progress = 0 };
 
             await _dbcontext.UserCourses.AddAsync(userCourse);
-            var result = await UpdateAccountWallet(tarif.Price);
 
-            if (result == null)
-            {
-                return null;
-            }
+            await _dbcontext.SaveChangesAsync();
+            var price = month ? tarif.PriceMonth : tarif.PriceYear * 12;
+            var result = await UpdateAccountWallet(price * (-1));
 
-            return userCourse;
+            return result;
         }
 
         public async Task<IEnumerable<User>> GetStudentsOfCourse(int courseId)
         {
-            var userCourses = _dbcontext.UserCourses.Where(x => x.CourseId == courseId);
+            var course = await _dbcontext.Courses.FirstOrDefaultAsync(x => x.Id == courseId);
+
+            if (course == null)
+            {
+                return null;
+            }
+
+            var tarifsIds = course.Tarifs.Select(x=>x.Id);
+            var userCourses = _dbcontext.UserCourses.Where(x => tarifsIds.Contains(x.TarifId));
             var users = new List<User>();
 
             foreach (var userCourse in userCourses)
             {
-                users.Add(_dbcontext.Users.FirstOrDefault(x=>x.Id == userCourse.UserId));
+                users.Add(await _dbcontext.Users.FirstOrDefaultAsync(x=>x.Id == userCourse.UserId));
             }
 
             return users;
@@ -240,7 +270,7 @@ namespace csharp_it.Services
             }
 
             var user = await GetCurrentUserAsync();
-            if (course.AuthorId == user.Id)
+            if (course.Teacher.UserId == user.Id)
             {
                 return true;
             }
@@ -253,7 +283,7 @@ namespace csharp_it.Services
             }
 
             var userCourse = await _dbcontext.UserCourses.FirstOrDefaultAsync(
-                x=>x.CourseId == courseId && x.UserId == user.Id);
+                x=> course.Tarifs.Select(t => t.Id).Contains(x.TarifId) && x.UserId == user.Id);
 
             if (userCourse == null)
             {
@@ -269,6 +299,78 @@ namespace csharp_it.Services
             }
 
             return true;
+        }
+
+        public async Task<string> SetEmailConfirmationCode(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            return token;
+        }
+
+        public string FormLetterEmailConfirmation(string token, string email)
+        {
+            StringBuilder html = new StringBuilder();
+            token = HttpUtility.UrlEncode(token);
+            email = HttpUtility.UrlEncode(email);
+            html.Append("To confirm your email on csharp_it please follow the link ");
+            html.Append(_appSettings.Url + "confirm-email?token=" + token);
+            html.Append("&email=" + email);
+            html.Append(". If you didn't register on this site, please ignore this message.");
+
+            return html.ToString();
+        }
+
+        public async Task<IdentityResult> ConfirmEmail(string token, string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                return null;
+            }
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+
+            return result;
+        }
+
+        public async Task<string> ForgotPassword(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+            {
+                return "";
+            }
+
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+            code = HttpUtility.UrlEncode(code);
+            var callbackUrl = "reset-password?userId=" + user.Id + "&code=" + code;
+
+            return callbackUrl;
+        }
+
+        public async Task<IdentityResult> ResetPassword(ResetPassword model)
+        {
+            var user = await _userManager.FindByIdAsync(model.Id);
+            if (user == null)
+            {
+                return null;
+            }
+            var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+
+            return result;
+        }
+
+        public string FormLetterPasswordRecovery(string link)
+        {
+            StringBuilder html = new StringBuilder();
+ 
+            html.Append("To reset your password on csharp_it please follow the link ");
+            html.Append(_appSettings.Url + link);
+            html.Append(". If you didn't try to reset password on this site, please ignore this message.");
+
+            return html.ToString();
         }
     }
 }

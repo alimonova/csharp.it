@@ -6,14 +6,15 @@ namespace csharp_it.Models
 	public class Tarif
 	{
 		public Guid Id { get; set; }
+		public string Name { get; set; }
 		public int CourseId { get; set; }
 		public virtual Course Course { get; set; }
-		public double Price { get; set; }
-		// 0 - USD
-		// 1 - UAH
-		// 2 - EUR
-		public int Currency { get; set; }
+		public double PriceMonth { get; set; }
+		public double PriceYear { get; set; }
+		public double FullPrice { get; set; }
+		public bool OnceBilling { get; set; } = false;
 		public string Description { get; set; }
+		public bool Popular { get; set; }
 
 		public virtual List<UserCourse> UserCourses { get; set; }
 		public virtual List<TarifAccess> TarifAccesses { get; set; }

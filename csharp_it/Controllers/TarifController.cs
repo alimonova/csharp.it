@@ -54,7 +54,9 @@ namespace csharp_it.Controllers
             }
 
             var tarifs = await _service.GetTarifsByCourseIdAsync(courseId);
-            return Ok(_mapper.Map<IEnumerable<TarifDto>>(tarifs));
+            var tarifsDto = _mapper.Map<IEnumerable<TarifDetailsDto>>(tarifs);
+
+            return Ok(tarifsDto);
         }
 
         [HttpPost("Create")]
@@ -68,14 +70,17 @@ namespace csharp_it.Controllers
                 return BadRequest();
             }
 
-            if (user.Id != course.AuthorId)
+            if (user.Id != course.Teacher.UserId)
             {
                 return Forbid();
             }
 
-            var _tarif = _mapper.Map<Tarif>(tarif);
+            var _tarif = await _service.CreateTarifAsync(_mapper.Map<Tarif>(tarif));
+
+            await this._service.CreateTarifAccessesAsync(_tarif.Id, tarif.Accesses);
+
             return Created("Tarif was created successfully",
-                _mapper.Map<TarifDto>(await _service.CreateTarifAsync(_tarif)));
+                _mapper.Map<TarifDto>(_tarif));
         }
 
         [HttpPost("AddAccessToTarif/{tarifId}/{accessId}")]
@@ -91,7 +96,7 @@ namespace csharp_it.Controllers
 
             var course = tarif.Course;
 
-            if (user.Id != course.AuthorId)
+            if (user.Id != course.Teacher.UserId)
             {
                 return Forbid();
             }
@@ -113,7 +118,7 @@ namespace csharp_it.Controllers
                 return BadRequest();
             }
 
-            if (user.Id != tarif.Course.AuthorId)
+            if (user.Id != tarif.Course.Teacher.UserId)
             {
                 return Forbid();
             }
@@ -133,7 +138,7 @@ namespace csharp_it.Controllers
                 return BadRequest();
             }
 
-            if (user.Id != tarif.Course.AuthorId)
+            if (user.Id != tarif.Course.Teacher.UserId)
             {
                 return Forbid();
             }

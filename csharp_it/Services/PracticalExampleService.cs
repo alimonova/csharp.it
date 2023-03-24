@@ -2,6 +2,11 @@
 using csharp_it.Models;
 using csharp_it.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
+using Microsoft.CodeAnalysis.Scripting;
+using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
+using System.IO;
+using System.Reactive.Linq;
 
 namespace csharp_it.Services
 {

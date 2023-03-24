@@ -71,7 +71,7 @@ namespace csharp_it.Controllers
         {
             var user = await _account.GetCurrentUserAsync();
             var chapter = await _chapters.GetChapterByIdAsync(lesson.ChapterId);
-            if (user.Id != chapter.Course.AuthorId)
+            if (user.Id != chapter.Course.Teacher.UserId)
             {
                 return Forbid();
             }
@@ -85,7 +85,7 @@ namespace csharp_it.Controllers
         {
             var user = await _account.GetCurrentUserAsync();
             var chapter = await _chapters.GetChapterByIdAsync(lesson.ChapterId);
-            if (user.Id != chapter.Course.AuthorId)
+            if (user.Id != chapter.Course.Teacher.UserId)
             {
                 return Forbid();
             }
@@ -105,13 +105,41 @@ namespace csharp_it.Controllers
                 return BadRequest();
             }
 
-            if (user.Id != lesson.Chapter.Course.AuthorId)
+            if (user.Id != lesson.Chapter.Course.Teacher.UserId)
             {
                 return Forbid();
             }
 
             await _service.DeleteAsync(lesson);
             return StatusCode((int)HttpStatusCode.NoContent);
+        }
+
+        [HttpPost("CheckTest")]
+        public async Task<IActionResult> CheckTest([FromBody] CheckTest model)
+        {
+            var lesson = await _service.GetLessonByIdAsync(model.lessonId);
+            if (!await _account.CheckAccessToCourse(lesson.Chapter.Course.Id,
+                "SEE_ANSWERS_AND_CHECK_TEST"))
+            {
+                return BadRequest();
+            }
+
+            var result = await this._service.CheckTestAsync(model.answers, lesson);
+            return Ok(result);
+        }
+
+        [HttpGet("GetRightAnswers")]
+        public async Task<IActionResult> GetRightAnswers(int id)
+        {
+            var lesson = await _service.GetLessonByIdAsync(id);
+            if (!await _account.CheckAccessToCourse(lesson.Chapter.CourseId,
+                "SEE_ANSWERS_AND_CHECK_TEST"))
+            {
+                return BadRequest();
+            }
+
+            var result = _service.GetRightAnswersByLesson(lesson);
+            return Ok(result);
         }
     }
 }

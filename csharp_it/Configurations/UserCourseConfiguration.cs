@@ -20,12 +20,6 @@ namespace csharp_it.Configurations
                 .HasForeignKey(ug => ug.UserId);
 
             builder
-                .HasOne(ug => ug.Course)
-                .WithMany(g => g.Students)
-                .OnDelete(DeleteBehavior.NoAction)
-                .HasForeignKey(ug => ug.CourseId);
-
-            builder
                 .HasOne(ug => ug.Tarif)
                 .WithMany(t => t.UserCourses)
                 .HasForeignKey(ug => ug.TarifId)

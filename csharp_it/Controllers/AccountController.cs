@@ -28,13 +28,22 @@ namespace csharp_it.Controllers
         private readonly IMapper _mapper;
         private readonly IAccountService _service;
         private readonly ICourseService _courses;
+        private readonly IEmailSender _sender;
 
         public AccountController(IMapper mapper, IAccountService service,
-            ICourseService courses)
+            ICourseService courses, IEmailSender sender)
         {
             _mapper = mapper;
             _service = service;
             _courses = courses;
+            _sender = sender;
+        }
+
+        [Authorize]
+        [HttpGet("CurrentUser")]
+        public async Task<UserDto> GetCurrentUser()
+        {
+            return _mapper.Map<UserDto>(await _service.GetCurrentUserAsync());
         }
 
         [HttpPost("Registration")]
@@ -43,10 +52,21 @@ namespace csharp_it.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _service.Register(model);
-                
+                var token = await _service.SetEmailConfirmationCode(model.Email);
+                var html = _service.FormLetterEmailConfirmation(token, model.Email);
+
                 if (!result.Succeeded)
                 {
                     return BadRequest(result.Errors);
+                }
+
+                try
+                {
+                    await _sender.SendEmailAsync(model.Email, "Email Confirmation", html);
+                }
+                catch
+                {
+                    return BadRequest("Email was not sent. Please contact administrator.");
                 }
 
                 return Created("", result);
@@ -85,12 +105,20 @@ namespace csharp_it.Controllers
                 return Unauthorized();
             }
 
+            /*if (!await _service.CheckEmailConfirmationAsync(model.Email))
+            {
+                return Forbid();
+            }*/
+
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+            var user = await _service.GetUserByEmailAsync(model.Email);
 
             return Ok(new
             {
                 Token = encodedJwt,
-                ValidTo = jwt.ValidTo
+                ValidTo = jwt.ValidTo,
+                User = _mapper.Map<UserDto>(user)
             });
         }
 
@@ -130,12 +158,12 @@ namespace csharp_it.Controllers
             return Ok(transactions);
         }
 
-        [HttpPost("BuyCourse/{tarifId}")]
-        public async Task<IActionResult> BuyCourse(Guid tarifId)
+        [HttpPost("BuyCourse")]
+        public async Task<IActionResult> BuyCourse([FromBody]BuyCourseModel model)
         {
-            var result = await _service.BuyCourse(tarifId);
+            var result = await _service.BuyCourse(model.TarifId, model.Month);
 
-            if (result == null)
+            if (result == -1)
             {
                 return BadRequest();
             }
@@ -149,7 +177,7 @@ namespace csharp_it.Controllers
         {
             var course = await _courses.GetCourseByIdAsync(courseId);
             var user = await _service.GetCurrentUserAsync();
-            if (course.AuthorId != user.Id)
+            if (course.Teacher.UserId != user.Id)
             {
                 return Forbid();
             }
@@ -157,6 +185,61 @@ namespace csharp_it.Controllers
             var students = _service.GetStudentsOfCourse(courseId);
             var _students = _mapper.Map<IEnumerable<UserDto>>(students);
             return Ok(_students);
+        }
+
+        [HttpGet("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail(string token, string email)
+        {
+            var result = await _service.ConfirmEmail(token, email);
+
+            if (result != null && result.Succeeded)
+            {
+                return Ok("Email was successfully confirmed");
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost("ForgotPassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody]ForgotPassword model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var link = await _service.ForgotPassword(model.Email);
+            var html = _service.FormLetterPasswordRecovery(link);
+               
+            try
+            {
+                await _sender.SendEmailAsync(model.Email, "Password Recovery", html);
+            }
+            catch
+            {
+                return BadRequest("Email was not sent. Please contact administrator.");
+            }
+
+            return Ok();
+            
+        }
+
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword([FromBody]ResetPassword model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _service.ResetPassword(model);
+
+                if (result != null && result.Succeeded)
+                {
+                    return Ok();
+                }
+            }
+
+            return BadRequest();
         }
     }
 }

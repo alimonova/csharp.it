@@ -12,8 +12,8 @@ namespace csharp_it.Configurations
             builder.ToTable("Tarifs");
             builder.HasKey(t => t.Id);
 
-            builder.Property(t => t.Price).IsRequired();
-            builder.Property(t => t.Currency).IsRequired();
+            builder.Property(t => t.PriceMonth).IsRequired();
+            builder.Property(t => t.PriceYear).IsRequired();
             builder.Property(t => t.Description).IsRequired();
 
             builder
@@ -31,7 +31,7 @@ namespace csharp_it.Configurations
                 .HasMany(t => t.TarifAccesses)
                 .WithOne(ta => ta.Tarif)
                 .HasForeignKey(ta => ta.TarifId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

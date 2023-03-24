@@ -106,12 +106,21 @@ namespace csharp_it.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<Guid>("AuthorId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<double>("MaxPrice")
+                        .HasColumnType("float");
+
+                    b.Property<double>("MinPrice")
+                        .HasColumnType("float");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -123,9 +132,12 @@ namespace csharp_it.Migrations
                     b.Property<int>("TasksNum")
                         .HasColumnType("int");
 
+                    b.Property<int>("TeacherId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("TeacherId");
 
                     b.ToTable("Courses", (string)null);
                 });
@@ -143,6 +155,9 @@ namespace csharp_it.Migrations
 
                     b.Property<string>("ContentLink")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Number")
@@ -189,6 +204,9 @@ namespace csharp_it.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Output")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("LessonId");
@@ -210,6 +228,9 @@ namespace csharp_it.Migrations
 
                     b.Property<int>("LessonId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Multiple")
+                        .HasColumnType("bit");
 
                     b.Property<int>("Number")
                         .HasColumnType("int");
@@ -296,14 +317,27 @@ namespace csharp_it.Migrations
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Currency")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Price")
+                    b.Property<double>("FullPrice")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("OnceBilling")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Popular")
+                        .HasColumnType("bit");
+
+                    b.Property<double>("PriceMonth")
+                        .HasColumnType("float");
+
+                    b.Property<double>("PriceYear")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
@@ -344,7 +378,11 @@ namespace csharp_it.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Example")
+                    b.Property<string>("ExampleInput")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExampleOutput")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -367,6 +405,29 @@ namespace csharp_it.Migrations
                     b.HasIndex("LessonId");
 
                     b.ToTable("Tasks");
+                });
+
+            modelBuilder.Entity("csharp_it.Models.Teacher", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Teachers", (string)null);
                 });
 
             modelBuilder.Entity("csharp_it.Models.UsefulResource", b =>
@@ -518,8 +579,14 @@ namespace csharp_it.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("CourseId")
+                    b.Property<int>("CurrentLessonNumber")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("Expiration")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Paid")
+                        .HasColumnType("bit");
 
                     b.Property<double>("Progress")
                         .HasColumnType("float");
@@ -531,8 +598,6 @@ namespace csharp_it.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CourseId");
 
                     b.HasIndex("TarifId");
 
@@ -710,13 +775,13 @@ namespace csharp_it.Migrations
 
             modelBuilder.Entity("csharp_it.Models.Course", b =>
                 {
-                    b.HasOne("csharp_it.Models.User", "Author")
+                    b.HasOne("csharp_it.Models.Teacher", "Teacher")
                         .WithMany("Courses")
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("Author");
+                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("csharp_it.Models.Lesson", b =>
@@ -812,6 +877,17 @@ namespace csharp_it.Migrations
                     b.Navigation("Lesson");
                 });
 
+            modelBuilder.Entity("csharp_it.Models.Teacher", b =>
+                {
+                    b.HasOne("csharp_it.Models.User", "User")
+                        .WithOne("Teacher")
+                        .HasForeignKey("csharp_it.Models.Teacher", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("csharp_it.Models.UsefulResource", b =>
                 {
                     b.HasOne("csharp_it.Models.Lesson", "Lesson")
@@ -834,12 +910,6 @@ namespace csharp_it.Migrations
 
             modelBuilder.Entity("csharp_it.Models.UserCourse", b =>
                 {
-                    b.HasOne("csharp_it.Models.Course", "Course")
-                        .WithMany("Students")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("csharp_it.Models.Tarif", "Tarif")
                         .WithMany("UserCourses")
                         .HasForeignKey("TarifId")
@@ -851,8 +921,6 @@ namespace csharp_it.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Course");
 
                     b.Navigation("Tarif");
 
@@ -951,8 +1019,6 @@ namespace csharp_it.Migrations
                 {
                     b.Navigation("Chapters");
 
-                    b.Navigation("Students");
-
                     b.Navigation("Tarifs");
                 });
 
@@ -986,11 +1052,17 @@ namespace csharp_it.Migrations
                     b.Navigation("UserTasks");
                 });
 
-            modelBuilder.Entity("csharp_it.Models.User", b =>
+            modelBuilder.Entity("csharp_it.Models.Teacher", b =>
                 {
                     b.Navigation("Courses");
+                });
 
+            modelBuilder.Entity("csharp_it.Models.User", b =>
+                {
                     b.Navigation("Solutions");
+
+                    b.Navigation("Teacher")
+                        .IsRequired();
 
                     b.Navigation("UserCourses");
 

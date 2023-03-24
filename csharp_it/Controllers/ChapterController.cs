@@ -51,7 +51,7 @@ namespace csharp_it.Controllers
         {
             var user = await _account.GetCurrentUserAsync();
             var course = await _courses.GetCourseByIdAsync(chapter.CourseId);
-            if (user.Id != course.AuthorId)
+            if (user.Id != course.Teacher.UserId)
             {
                 return Forbid();
             }
@@ -65,18 +65,13 @@ namespace csharp_it.Controllers
         {
             var user = await _account.GetCurrentUserAsync();
             var course = await _courses.GetCourseByIdAsync(chapter.CourseId);
-            if (user.Id != course.AuthorId)
+            if (user.Id != course.Teacher.UserId)
             {
                 return Forbid();
             }
 
-            if (user.Id == course.AuthorId)
-            {
-                var _chapter = _mapper.Map<Chapter>(chapter);
-                return StatusCode((int)HttpStatusCode.NoContent, _mapper.Map<ChapterDto>(await _service.UpdateChapterAsync(_chapter)));
-            }
-
-            return Forbid();
+            var _chapter = _mapper.Map<Chapter>(chapter);
+            return StatusCode((int)HttpStatusCode.NoContent, _mapper.Map<ChapterDto>(await _service.UpdateChapterAsync(_chapter)));
         }
 
         [HttpDelete("Delete/{id}")]
@@ -91,7 +86,7 @@ namespace csharp_it.Controllers
             }
 
             var course = await _courses.GetCourseByIdAsync(chapter.CourseId);
-            if (user.Id != course.AuthorId)
+            if (user.Id != course.Teacher.UserId)
             {
                 return Forbid();
             }

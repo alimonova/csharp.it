@@ -9,6 +9,7 @@ namespace csharp_it.Models
 		public int ChapterId { get; set; }
 		public virtual Chapter Chapter { get; set; }
 		public string Topic { get; set; }
+		public string? Description { get; set; }
 		public string? ContentLink { get; set; }
 		public string? VideoLink { get; set; }
 

@@ -46,29 +46,6 @@ namespace csharp_it.Services
             await _dbcontext.SaveChangesAsync();
             return answer;
         }
-
-        public async Task<double> CheckTest(List<int> answers)
-        {
-            int rightAnswers = 0;
-            var answer = new Answer();
-            foreach (var answerId in answers)
-            {
-                answer = await GetAnswerByIdAsync(answerId);
-                if (answer == null)
-                {
-                    return -1;
-                }
-
-                if (answer.RightAnswer)
-                {
-                    rightAnswers++;
-                }
-            }
-
-            var questionsCount = answer.Question.Lesson.Questions.Count();
-
-            return (double)(rightAnswers / questionsCount) * 100;
-        }
     }
 }
 

@@ -12,28 +12,20 @@ namespace csharp_it.Configurations
             builder.HasKey(c => c.Id);
 
             builder.Property(c => c.Name).IsRequired();
+            builder.Property(c => c.Duration).IsRequired();
             builder.Property(c => c.Description).IsRequired();
 
             builder
                 .HasMany(c => c.Chapters)
                 .WithOne(ch => ch.Course)
-                .HasForeignKey(ch => ch.CourseId);
+                .HasForeignKey(ch => ch.CourseId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder
                 .HasMany(c => c.Tarifs)
                 .WithOne(t => t.Course)
-                .HasForeignKey(t => t.CourseId);
-
-            builder
-                .HasMany(c => c.Students)
-                .WithOne(uc => uc.Course)
-                .HasForeignKey(uc => uc.CourseId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            builder
-                .HasOne(c => c.Author)
-                .WithMany(a => a.Courses)
-                .HasForeignKey(c => c.AuthorId);
+                .HasForeignKey(t => t.CourseId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

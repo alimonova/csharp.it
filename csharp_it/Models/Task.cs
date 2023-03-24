@@ -9,7 +9,8 @@ namespace csharp_it.Models
 		public int Number { get; set; }
 		public int LessonId { get; set; }
 		public virtual Lesson Lesson { get; set; }
-		public string Example { get; set; }
+		public string ExampleInput { get; set; }
+		public string ExampleOutput { get; set; }
 		public string Tips { get; set; }
 
 		public virtual List<UserTask> UserTasks { get; set; }

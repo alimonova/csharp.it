@@ -19,22 +19,26 @@ namespace csharp_it.Configurations
             builder
                 .HasMany(l => l.Questions)
                 .WithOne(q => q.Lesson)
-                .HasForeignKey(q => q.LessonId);
+                .HasForeignKey(q => q.LessonId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder
                 .HasMany(l => l.PracticalExamples)
                 .WithOne(p => p.Lesson)
-                .HasForeignKey(p => p.LessonId);
+                .HasForeignKey(p => p.LessonId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder
                 .HasMany(l => l.UsefulResources)
                 .WithOne(u => u.Lesson)
-                .HasForeignKey(u => u.LessonId);
+                .HasForeignKey(u => u.LessonId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder
                 .HasMany(l => l.Tasks)
                 .WithOne(t => t.Lesson)
-                .HasForeignKey(t => t.LessonId);
+                .HasForeignKey(t => t.LessonId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder
                 .HasOne(l => l.Chapter)

@@ -10,6 +10,7 @@ namespace csharp_it.Models
         public string Audience { get; set; }
         public string Issuer { get; set; }
         public int Lifetime { get; set; }
+        public string Url { get; set; }
 
         public SymmetricSecurityKey GetSymmetricSecurityKey()
         {

@@ -21,6 +21,7 @@ namespace csharp_it.Models
         public DbSet<Access> Accesses { get; set; }
         public DbSet<TarifAccess> TarifAccesses { get; set; }
         public DbSet<Solution> Solutions { get; set; }
+        public DbSet<Teacher> Teachers { get; set; }
 
         public DbContext()
         { }
@@ -47,6 +48,7 @@ namespace csharp_it.Models
             modelBuilder.ApplyConfiguration(new AccessConfiguration());
             modelBuilder.ApplyConfiguration(new TarifAccessConfiguration());
             modelBuilder.ApplyConfiguration(new SolutionConfiguration());
+            modelBuilder.ApplyConfiguration(new TeacherConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

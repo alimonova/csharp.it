@@ -9,23 +9,23 @@ namespace csharp_it.Models
 		public int Id { get; set; }
 		public string Name { get; set; }
 		public string Description { get; set; }
-		public Guid AuthorId { get; set; }
-		public virtual User Author { get; set; }
-		public int TasksNum { get; set; }
-		public int SecondsNum { get; set; }
+		public int TeacherId { get; set; }
+		public virtual Teacher Teacher { get; set; }
+		public int TasksNum { get; set; } = 0;
+		public int SecondsNum { get; set; } = 0;
+		public double MinPrice { get; set; } = 0;
+		public double MaxPrice { get; set; } = 0;
+		public int Duration { get; set; }
+
+		public DateTime Created { get; set; }
 
 		public virtual List<Chapter> Chapters { get; set; }
 		public virtual List<Tarif> Tarifs { get; set; }
-		public virtual List<UserCourse> Students { get; set; }
 
 		public Course()
 		{
-			TasksNum = 0;
-			SecondsNum = 0;
-
 			Chapters = new List<Chapter>();
 			Tarifs = new List<Tarif>();
-			Students = new List<UserCourse>();
 		}
 	}
 }

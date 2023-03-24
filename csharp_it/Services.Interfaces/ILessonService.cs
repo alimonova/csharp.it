@@ -10,6 +10,8 @@ namespace csharp_it.Services.Interfaces
         Task<Lesson> GetLessonByIdAsync(int id);
         Task<IEnumerable<Lesson>> GetLessonsByChapterIdAsync(int chapterId);
         Task<Lesson> UpdateLessonAsync(Lesson lesson);
+        Task<TestResult> CheckTestAsync(List<int> answers, Lesson lesson);
+        List<QuestionWithAnswer> GetRightAnswersByLesson(Lesson lesson);
     }
 }
 

@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  coursedb:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+
+  csharp_it:
+    image: ${DOCKER_REGISTRY-}csharpit
+    build:
+      context: .
+      dockerfile: csharp_it/Dockerfile

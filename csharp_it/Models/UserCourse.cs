@@ -5,12 +5,13 @@ namespace csharp_it.Models
 	{
 		public int Id { get; set; }
 		public double Progress { get; set; }
-		public int CourseId { get; set; }
-		public virtual Course Course { get; set; }
 		public Guid UserId { get; set; }
 		public virtual User User { get; set; }
 		public Guid TarifId { get; set; }
 		public virtual Tarif Tarif { get; set; }
+		public DateTime Expiration { get; set; }
+		public int CurrentLessonNumber { get; set; } = 1;
+		public bool Paid { get; set; } = false;
 
 		public UserCourse()
         {

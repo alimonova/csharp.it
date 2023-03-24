@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "dgSpecHash": "at0HuCnmRbmiJtmLyuByPUv4Ywy3/liKEKxmRpVuz1DXHVZ/7IcnxcWnJ76tZLJi32UPiDBBeV/5MWgVGi5EPg==",
+  "success": true,
+  "projectFilePath": "/Users/admin/Projects/csharp_it/CsharpCompiler/CsharpCompiler.csproj",
+  "expectedPackageFiles": [
+    "/Users/admin/.nuget/packages/microsoft.codedom.providers.dotnetcompilerplatform/3.6.0/microsoft.codedom.providers.dotnetcompilerplatform.3.6.0.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Microsoft.CodeDom.Providers.DotNetCompilerPlatform 3.6.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework '.NETStandard,Version=v2.1'. This package may not be fully compatible with your project.",
+      "libraryId": "Microsoft.CodeDom.Providers.DotNetCompilerPlatform",
+      "targetGraphs": [
+        ".NETStandard,Version=v2.1"
+      ]
+    }
+  ]
+}

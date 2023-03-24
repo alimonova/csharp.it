@@ -10,7 +10,6 @@ namespace csharp_it.Services.Interfaces
         Task<Answer> GetAnswerByIdAsync(int id);
         Task<IEnumerable<Answer>> GetAnswersByQuestionIdAsync(int qusestionId);
         Task<Answer> UpdateAnswerAsync(Answer answer);
-        Task<double> CheckTest(List<int> answers);
     }
 }
 

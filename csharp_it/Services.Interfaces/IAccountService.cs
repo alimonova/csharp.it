@@ -11,15 +11,23 @@ namespace csharp_it.Services.Interfaces
 	{
 		Task<IdentityResult> Register(UserRegistration model);
 		Task<JwtSecurityToken> Authenticate(UserAuthorization model);
+		Task<string> SetEmailConfirmationCode(string email);
+		string FormLetterEmailConfirmation(string token, string email);
 		Task<User> GetCurrentUserAsync();
 		Task<IEnumerable<User>> GetUsersOfRole(string role);
 		Task<IEnumerable<User>> GetStudentsOfCourse(int courseId);
 		Task<IEnumerable<string>> GetCurrentUserRoles();
 		Task<IEnumerable<string>> GetRolesByUserEmail(string email);
-		Task<User> UpdateAccountWallet(double sum);
+		Task<double> UpdateAccountWallet(double sum);
 		Transaction[] GetTransactions();
-		Task<UserCourse> BuyCourse(Guid tarifId);
+		Task<double> BuyCourse(Guid tarifId, bool month);
 		Task<bool> CheckAccessToCourse(int courseId, string accessName);
+		Task<IdentityResult> ConfirmEmail(string email, string token);
+		Task<bool> CheckEmailConfirmationAsync(string email);
+		Task<string> ForgotPassword(string email);
+		string FormLetterPasswordRecovery(string link);
+		Task<IdentityResult> ResetPassword(ResetPassword model);
+		Task<User> GetUserByEmailAsync(string email);
 	}
 }
 

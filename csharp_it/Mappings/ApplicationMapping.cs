@@ -12,13 +12,9 @@ namespace csharp_it.Mappings
             CreateMap<Access, AccessDto>().ReverseMap();
             CreateMap<Answer, AnswerDto>().ReverseMap();
             CreateMap<Answer, AnswerRightDto>().ReverseMap();
-            CreateMap<Chapter, ChapterDto>().ReverseMap();
-            CreateMap<Course, CourseDto>().ReverseMap();
-            CreateMap<Lesson, LessonDto>().ReverseMap();
-            CreateMap<PracticalExample, PracticalExampleDto>().ReverseMap();
-            CreateMap<Question, QuestionDto>().ReverseMap();
-            CreateMap<Question, QuestionNoExplanationDto>().ReverseMap();
+            CreateMap<TarifAccess, TarifAccessDto>().ReverseMap();
             CreateMap<Tarif, TarifDto>().ReverseMap();
+            CreateMap<Tarif, TarifDetailsDto>().ReverseMap();
             CreateMap<Task, TaskDto>().ReverseMap();
             CreateMap<UsefulResource, UsefulResourceDto>().ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
@@ -26,6 +22,18 @@ namespace csharp_it.Mappings
             CreateMap<UserTask, UserTaskDto>().ReverseMap();
             CreateMap<Solution, SolutionDto>().ReverseMap();
             CreateMap<Solution, SolutionCreationDto>().ReverseMap();
+            CreateMap<PracticalExample, PracticalExampleDto>().ReverseMap();
+            CreateMap<Question, EmptyQuestionDto>().ReverseMap();
+            CreateMap<Question, QuestionDto>().ReverseMap();
+            CreateMap<Question, QuestionDetailsDto>().ReverseMap();
+            CreateMap<Question, QuestionNoExplanationDto>().ReverseMap();
+            CreateMap<Lesson, LessonDto>().ReverseMap();
+            CreateMap<Lesson, LessonDetailsDto>().ReverseMap();
+            CreateMap<Chapter, ChapterDto>().ReverseMap();
+            CreateMap<Chapter, ChapterDetailsDto>().ReverseMap();
+            CreateMap<Course, CourseDto>().ReverseMap();
+            CreateMap<Course, CourseWithTarifsDto>().ReverseMap();
+            CreateMap<Course, CourseDetailsDto>().ReverseMap();
         }
     }
 }

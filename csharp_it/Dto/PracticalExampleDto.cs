@@ -8,6 +8,7 @@
 		public string Code { get; set; }
 		public string Name { get; set; }
 		public int LessonId { get; set; }
+		public string Output { get; set; }
 	}
 }
 

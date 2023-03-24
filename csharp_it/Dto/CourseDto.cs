@@ -9,6 +9,11 @@ namespace csharp_it.Dto
 		public Guid AuthorId { get; set; }
 		public int TasksNum { get; set; }
 		public int SecondsNum { get; set; }
+		public double MinPrice { get; set; }
+		public double MaxPrice { get; set; }
+		public DateTime Created { get; set; }
+		public int Duration { get; set; }
+		public int LessonsNumber { get; set; }
 	}
 }
 

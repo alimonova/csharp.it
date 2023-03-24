@@ -7,6 +7,7 @@ namespace csharp_it.Dto
 		public int Number { get; set; }
 		public string Text { get; set; }
 		public int LessonId { get; set; }
+		public bool Multiple { get; set; }
 	}
 }
 

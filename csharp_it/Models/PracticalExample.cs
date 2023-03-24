@@ -10,6 +10,7 @@ namespace csharp_it.Models
 		public string? Code { get; set; }
 		public string Name { get; set; }
 		public int LessonId { get; set; }
+		public string? Output { get; set; }
 		public virtual Lesson Lesson { get; set; }
 	}
 }
